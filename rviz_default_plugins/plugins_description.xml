@@ -25,6 +25,17 @@
   </class>
 
   <class
+    name="rviz_default_plugins/DynamicPoint"
+    type="rviz_default_plugins::displays::DynamicPointDisplay"
+    base_class_type="rviz_common::Display"
+  >
+    <description>
+      Displays a Point along the ground plane, with color and alpha according to acceleration and speed respectively
+    </description>
+    <message_type>geometry_msgs/PointStamped</message_type>
+  </class>
+
+  <class
     name="rviz_default_plugins/GridCells"
     type="rviz_default_plugins::displays::GridCellsDisplay"
     base_class_type="rviz_common::Display"
