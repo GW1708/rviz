@@ -102,6 +102,7 @@ set(rviz_default_plugins_headers_to_moc
   include/rviz_default_plugins/displays/pose_array/pose_array_display.hpp
   include/rviz_default_plugins/displays/range/range_display.hpp
   include/rviz_default_plugins/displays/robot_model/robot_model_display.hpp
+  include/rviz_default_plugins/displays/temperature/temperature_display.hpp
   include/rviz_default_plugins/displays/tf/frame_info.hpp
   include/rviz_default_plugins/displays/tf/tf_display.hpp
   include/rviz_default_plugins/robot/robot.hpp
@@ -167,6 +168,7 @@ set(rviz_default_plugins_source_files
   src/rviz_default_plugins/displays/pose_array/flat_arrows_array.cpp
   src/rviz_default_plugins/displays/range/range_display.cpp
   src/rviz_default_plugins/displays/robot_model/robot_model_display.cpp
+  src/rviz_default_plugins/displays/temperature/temperature_display.cpp
   src/rviz_default_plugins/displays/tf/frame_info.cpp
   src/rviz_default_plugins/displays/tf/frame_selection_handler.cpp
   src/rviz_default_plugins/displays/tf/tf_display.cpp

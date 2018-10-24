@@ -132,6 +132,17 @@
   </class>
 
   <class
+    name="rviz_default_plugins/Temperature"
+    type="rviz_default_plugins::displays::TemperatureDisplay"
+    base_class_type="rviz_common::Display"
+  >
+    <description>
+      Displays a temperature field
+    </description>
+    <message_type>sensor_msgs/Temperature</message_type>
+  </class>
+
+  <class
     name="rviz_default_plugins/TF"
     type="rviz_default_plugins::displays::TFDisplay"
     base_class_type="rviz_common::Display"
