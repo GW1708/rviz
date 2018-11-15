@@ -610,6 +610,22 @@ if(BUILD_TESTING)
       rviz_visual_testing_framework::rviz_visual_testing_framework)
   endif()
 
+  ament_add_gtest(fluid_pressure_display_visual_test
+          test/rviz_default_plugins/displays/fluid_pressure/fluid_pressure_display_visual_test.cpp
+          test/rviz_default_plugins/page_objects/fluid_pressure_display_page_object.cpp
+          test/rviz_default_plugins/page_objects/point_cloud_common_page_object.cpp
+          test/rviz_default_plugins/pointcloud_messages.cpp
+          ${SKIP_VISUAL_TESTS}
+          TIMEOUT 180)
+  if(TARGET fluid_pressure_display_visual_test)
+    target_include_directories(fluid_pressure_display_visual_test PUBLIC
+            ${TEST_INCLUDE_DIRS}
+            ${rviz_visual_testing_framework_INCLUDE_DIRS})
+    target_link_libraries(fluid_pressure_display_visual_test
+            ${TEST_LINK_LIBRARIES}
+            rviz_visual_testing_framework::rviz_visual_testing_framework)
+  endif()
+
   ament_add_gtest(grid_display_visual_test
     test/rviz_default_plugins/displays/grid/grid_display_visual_test.cpp
     test/rviz_default_plugins/page_objects/grid_display_page_object.cpp
