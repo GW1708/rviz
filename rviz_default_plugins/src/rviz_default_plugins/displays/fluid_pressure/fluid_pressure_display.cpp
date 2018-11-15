@@ -27,87 +27,77 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "rviz_default_plugins/displays/fluid_pressure/fluid_pressure_display.hpp"
+
+#include <memory>
+
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-#include <ros/time.h>
+#include "rclcpp/clock.hpp"
+#include "rclcpp/time.hpp"
+#include "rviz_default_plugins/displays/pointcloud/point_cloud_common.hpp"
+#include "rviz_default_plugins/displays/pointcloud/point_cloud_transformer.hpp"
+#include "rviz_common/display_context.hpp"
+#include "rviz_common/frame_manager_iface.hpp"
+#include "rviz_rendering/objects/point_cloud.hpp"
 
-#include "rviz/default_plugin/point_cloud_common.h"
-#include "rviz/default_plugin/point_cloud_transformers.h"
-#include "rviz/display_context.h"
-#include "rviz/frame_manager.h"
-#include "rviz/ogre_helpers/point_cloud.h"
-#include "rviz/properties/int_property.h"
-#include "rviz/validate_floats.h"
+#include "rviz_common/properties/queue_size_property.hpp"
+#include "rviz_common/validate_floats.hpp"
 
-#include "fluid_pressure_display.h"
+namespace rviz_default_plugins
+{
 
-namespace rviz
+namespace displays
 {
 
 FluidPressureDisplay::FluidPressureDisplay()
-  : point_cloud_common_( new PointCloudCommon( this ))
-{
-  queue_size_property_ = new IntProperty( "Queue Size", 10,
-                                          "Advanced: set the size of the incoming FluidPressure message queue. "
-                                          " Increasing this is useful if your incoming TF data is delayed significantly "
-                                          "from your FluidPressure data, but it can greatly increase memory usage if the messages are big.",
-                                          this, SLOT( updateQueueSize() ));
-
-  // PointCloudCommon sets up a callback queue with a thread for each
-  // instance.  Use that for processing incoming messages.
-  update_nh_.setCallbackQueue( point_cloud_common_->getCallbackQueue() );
-}
+: queue_size_property_(new rviz_common::QueueSizeProperty(this, 10)),
+  point_cloud_common_(new PointCloudCommon(this))
+{}
 
 FluidPressureDisplay::~FluidPressureDisplay()
-{
-  delete point_cloud_common_;
-}
+{}
 
 void FluidPressureDisplay::onInitialize()
 {
-  MFDClass::onInitialize();
-  point_cloud_common_->initialize( context_, scene_node_ );
+  RTDClass::onInitialize();
+  point_cloud_common_->initialize(context_, scene_node_);
 
-  // Set correct initial values
+  /*// Set correct initial values
   subProp("Channel Name")->setValue("fluid_pressure");
   subProp("Autocompute Intensity Bounds")->setValue(false);
   subProp("Min Intensity")->setValue(98000); // Typical 'low' atmosphereic pressure in Pascal
-  subProp("Max Intensity")->setValue(105000); // Typica 'high' atmosphereic pressure in Pascal
+  subProp("Max Intensity")->setValue(105000); // Typica 'high' atmosphereic pressure in Pascal*/
 }
 
-void FluidPressureDisplay::updateQueueSize()
-{
-  tf_filter_->setQueueSize( (uint32_t) queue_size_property_->getInt() );
-}
-
-void FluidPressureDisplay::processMessage( const sensor_msgs::FluidPressureConstPtr& msg )
+void FluidPressureDisplay::processMessage(const sensor_msgs::msg::FluidPressure::ConstSharedPtr msg)
 {
   // Filter any nan values out of the cloud.  Any nan values that make it through to PointCloudBase
   // will get their points put off in lala land, but it means they still do get processed/rendered
   // which can be a big performance hit
-  sensor_msgs::PointCloud2Ptr filtered(new sensor_msgs::PointCloud2);
+  auto filtered = std::make_shared<sensor_msgs::msg::PointCloud2>();
 
   // Create fields
-  sensor_msgs::PointField x;
+  sensor_msgs::msg::PointField x;
   x.name = "x";
   x.offset = 0;
-  x.datatype = sensor_msgs::PointField::FLOAT32;
+  x.datatype = sensor_msgs::msg::PointField::FLOAT32;
   x.count = 1;
-  sensor_msgs::PointField y;
+  sensor_msgs::msg::PointField y;
   y.name = "y";
   y.offset = 4;
-  y.datatype = sensor_msgs::PointField::FLOAT32;
+  y.datatype = sensor_msgs::msg::PointField::FLOAT32;
   y.count = 1;
-  sensor_msgs::PointField z;
+  sensor_msgs::msg::PointField z;
   z.name = "z";
   z.offset = 8;
-  z.datatype = sensor_msgs::PointField::FLOAT32;
+  z.datatype = sensor_msgs::msg::PointField::FLOAT32;
   z.count = 1;
-  sensor_msgs::PointField fluid_pressure;
+  sensor_msgs::msg::PointField fluid_pressure;
   fluid_pressure.name = "fluid_pressure";
   fluid_pressure.offset = 12;
-  fluid_pressure.datatype = sensor_msgs::PointField::FLOAT64;
+  fluid_pressure.datatype = sensor_msgs::msg::PointField::FLOAT64;
   fluid_pressure.count = 1;
 
   // Create pointcloud from message
@@ -129,28 +119,35 @@ void FluidPressureDisplay::processMessage( const sensor_msgs::FluidPressureConst
   filtered->row_step = 1;
 
   // Give to point_cloud_common to draw
-  point_cloud_common_->addMessage( filtered );
+  point_cloud_common_->addMessage(filtered);
 }
 
 
 void FluidPressureDisplay::update( float wall_dt, float ros_dt )
 {
-  point_cloud_common_->update( wall_dt, ros_dt );
+  point_cloud_common_->update(wall_dt, ros_dt);
 
-  // Hide unneeded properties
+  /*// Hide unneeded properties
   subProp("Position Transformer")->hide();
   subProp("Color Transformer")->hide();
   subProp("Channel Name")->hide();
-  subProp("Autocompute Intensity Bounds")->hide();
+  subProp("Autocompute Intensity Bounds")->hide();*/
 }
 
 void FluidPressureDisplay::reset()
 {
-  MFDClass::reset();
+  RTDClass::reset();
   point_cloud_common_->reset();
 }
 
-} // namespace rviz
+void FluidPressureDisplay::onDisable()
+{
+  RosTopicDisplay::onDisable();
+  point_cloud_common_->onDisable();
+}
 
-#include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS( rviz::FluidPressureDisplay, rviz::Display )
+}  // namespace displays
+}  // namespace rviz_default_plugins
+
+#include <pluginlib/class_list_macros.hpp>
+PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::FluidPressureDisplay, rviz_common::Display)

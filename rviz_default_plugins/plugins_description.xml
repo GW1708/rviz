@@ -15,6 +15,17 @@
   </class>
 
   <class
+          name="rviz_default_plugins/FluidPressure"
+          type="rviz_default_plugins::displays::FluidPressureDisplay"
+          base_class_type="rviz_common::Display"
+  >
+    <description>
+      Displays a fluid pressure sensor
+    </description>
+    <message_type>sensor_msgs/FluidPressure</message_type>
+  </class>
+
+  <class
     name="rviz_default_plugins/Grid"
     type="rviz_default_plugins::displays::GridDisplay"
     base_class_type="rviz_common::Display"
