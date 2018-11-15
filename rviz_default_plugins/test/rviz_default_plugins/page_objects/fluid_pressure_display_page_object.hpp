@@ -38,9 +38,9 @@
 class FluidPressureDisplayPageObject : public PointCloudCommonPageObject
 {
 public:
-    FluidPressureDisplayPageObject();
+  FluidPressureDisplayPageObject();
 
-    void setQueueSize(int queue_size);
+  void setQueueSize(int queue_size);
 };
 
 #endif  // RVIZ_DEFAULT_PLUGINS__PAGE_OBJECTS__FLUID_PRESSURE_DISPLAY_PAGE_OBJECT_HPP_

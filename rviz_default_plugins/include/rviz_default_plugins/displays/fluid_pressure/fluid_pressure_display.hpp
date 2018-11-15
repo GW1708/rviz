@@ -43,10 +43,10 @@
 
 namespace rviz_common
 {
-  namespace properties
-  {
-      class IntProperty;
-  }  // namespace properties
+namespace properties
+{
+class IntProperty;
+}    // namespace properties
 }  // namespace rviz_common
 
 namespace rviz_default_plugins
@@ -69,20 +69,20 @@ class RVIZ_DEFAULT_PLUGINS_PUBLIC FluidPressureDisplay : public
   Q_OBJECT
 
 public:
-    FluidPressureDisplay();
-    ~FluidPressureDisplay();
+  FluidPressureDisplay();
+  ~FluidPressureDisplay();
 
-    void reset() override;
-    void update(float wall_dt, float ros_dt) override;
-    void onDisable() override;
-    void processMessage(const sensor_msgs::msg::FluidPressure::ConstSharedPtr msg) override;
+  void reset() override;
+  void update(float wall_dt, float ros_dt) override;
+  void onDisable() override;
+  void processMessage(const sensor_msgs::msg::FluidPressure::ConstSharedPtr msg) override;
 
 protected:
-    void onInitialize() override;
+  void onInitialize() override;
 
 private:
-    std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
-    std::shared_ptr<PointCloudCommon> point_cloud_common_;
+  std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
+  std::shared_ptr<PointCloudCommon> point_cloud_common_;
 };
 
 }  // namespace displays

@@ -36,7 +36,7 @@
 #include <QTest>  // NOLINT
 
 FluidPressureDisplayPageObject::FluidPressureDisplayPageObject()
-        : PointCloudCommonPageObject("FluidPressure")
+: PointCloudCommonPageObject("FluidPressure")
 {}
 
 void FluidPressureDisplayPageObject::setQueueSize(int queue_size)

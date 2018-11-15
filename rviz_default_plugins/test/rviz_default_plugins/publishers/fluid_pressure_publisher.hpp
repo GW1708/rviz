@@ -45,45 +45,45 @@ using namespace std::chrono_literals; //NOLINT
 namespace nodes
 {
 
-    sensor_msgs::msg::FluidPressure createFluidPressure(float press, float var)
-    {
-      sensor_msgs::msg::FluidPressure fluidPressure;
-      fluidPressure.fluid_pressure = press;
-      fluidPressure.variance = var;
+sensor_msgs::msg::FluidPressure createFluidPressure(float press, float var)
+{
+  sensor_msgs::msg::FluidPressure fluidPressure;
+  fluidPressure.fluid_pressure = press;
+  fluidPressure.variance = var;
 
-      return fluidPressure;
-    }
+  return fluidPressure;
+}
 
-    class FluidPressurePublisher : public rclcpp::Node
-    {
-    public:
-        FluidPressurePublisher()
-                : Node("fluid_pressure_publisher"),
-                  count_(0)
-        {
-          publisher_ = this->create_publisher<sensor_msgs::msg::FluidPressure>("fluid_pressure");
+class FluidPressurePublisher : public rclcpp::Node
+{
+public:
+  FluidPressurePublisher()
+  : Node("fluid_pressure_publisher"),
+    count_(0)
+  {
+    publisher_ = this->create_publisher<sensor_msgs::msg::FluidPressure>("fluid_pressure");
 
-          auto timer_callback =
-                  [this]() -> void {
-                      auto message = sensor_msgs::msg::FluidPressure();
+    auto timer_callback =
+      [this]() -> void {
+        auto message = sensor_msgs::msg::FluidPressure();
 
-                      message.header = std_msgs::msg::Header();
-                      message.header.frame_id = "fluid_pressure_frame";
-                      message.header.stamp = rclcpp::Clock().now();
+        message.header = std_msgs::msg::Header();
+        message.header.frame_id = "fluid_pressure_frame";
+        message.header.stamp = rclcpp::Clock().now();
 
-                      message.fluid_pressure = 20.0;
-                      message.variance = 1.0;
+        message.fluid_pressure = 20.0;
+        message.variance = 1.0;
 
-                      this->publisher_->publish(message);
-                  };
-          timer_ = this->create_wall_timer(500ms, timer_callback);
-        }
+        this->publisher_->publish(message);
+      };
+    timer_ = this->create_wall_timer(500ms, timer_callback);
+  }
 
-    private:
-        rclcpp::TimerBase::SharedPtr timer_;
-        rclcpp::Publisher<sensor_msgs::msg::FluidPressure>::SharedPtr publisher_;
-        size_t count_;
-    };
+private:
+  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Publisher<sensor_msgs::msg::FluidPressure>::SharedPtr publisher_;
+  size_t count_;
+};
 
 }  // namespace nodes
 

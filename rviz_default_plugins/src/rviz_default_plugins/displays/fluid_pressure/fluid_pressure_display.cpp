@@ -107,7 +107,7 @@ void FluidPressureDisplay::processMessage(const sensor_msgs::msg::FluidPressure:
   filtered->fields.push_back(z);
   filtered->fields.push_back(fluid_pressure);
   filtered->data.resize(20);
-  const float zero_float = 0.0; // FluidPressure is always on its tf frame
+  const float zero_float = 0.0;  // FluidPressure is always on its tf frame
   memcpy(&filtered->data[x.offset], &zero_float, 4);
   memcpy(&filtered->data[y.offset], &zero_float, 4);
   memcpy(&filtered->data[z.offset], &zero_float, 4);
@@ -123,7 +123,7 @@ void FluidPressureDisplay::processMessage(const sensor_msgs::msg::FluidPressure:
 }
 
 
-void FluidPressureDisplay::update( float wall_dt, float ros_dt )
+void FluidPressureDisplay::update(float wall_dt, float ros_dt)
 {
   point_cloud_common_->update(wall_dt, ros_dt);
 
@@ -149,5 +149,5 @@ void FluidPressureDisplay::onDisable()
 }  // namespace displays
 }  // namespace rviz_default_plugins
 
-#include <pluginlib/class_list_macros.hpp>
+#include <pluginlib/class_list_macros.hpp> // NOLINT
 PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::FluidPressureDisplay, rviz_common::Display)
