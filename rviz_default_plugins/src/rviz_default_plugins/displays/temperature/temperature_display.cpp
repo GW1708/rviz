@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, Willow Garage, Inc.
+ * Copyright (c) 2018, Maximilian Kuehn
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,20 +35,17 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-//#include "rclcpp/clock" //!! rclcpp clock
-
+#include "rclcpp/clock.hpp"
+#include "rclcpp/time.hpp"
 #include "rviz_default_plugins/displays/pointcloud/point_cloud_common.hpp"
 #include "rviz_default_plugins/displays/pointcloud/point_cloud_transformer.hpp"
 #include "rviz_common/display_context.hpp"
 #include "rviz_common/frame_manager_iface.hpp"
 #include "rviz_rendering/objects/point_cloud.hpp"
 
-//#include "rviz_common/properties/int_property.hpp"
-
 #include "rviz_common/properties/queue_size_property.hpp"
 #include "rviz_common/validate_floats.hpp"
 
-//#include "rviz/ogre_helpers/point_cloud.h"
 
 namespace rviz_default_plugins
 {
@@ -67,21 +65,7 @@ void TemperatureDisplay::onInitialize()
 {
   RTDClass::onInitialize();
   point_cloud_common_->initialize(context_, scene_node_);
-
-  // Set correct initial values
-  /*subProp("Channel Name")->setValue("temperature");
-  subProp("Autocompute Intensity Bounds")->setValue(false);
-  subProp("Invert Rainbow")->setValue(true);
-  subProp("Min Intensity")->setValue(0); // Water Freezing
-  subProp("Max Intensity")->setValue(100); // Water Boiling*/
-
-  // subProp??
 }
-
-/*void TemperatureDisplay::updateQueueSize()
-{
-  tf_filter_->setQueueSize( (uint32_t) queue_size_property_->getInt() );
-}*/
 
 void TemperatureDisplay::processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message)
 {
@@ -116,7 +100,7 @@ void TemperatureDisplay::processMessage(const sensor_msgs::msg::Temperature::Con
   filtered->fields.push_back(z);
   filtered->fields.push_back(temperature);
   filtered->data.resize(20);
-  const float zero_float = 0.0; // RelativeHumidity is always on its tf frame
+  const float zero_float = 0.0;  // RelativeHumidity is always on its tf frame
   memcpy(&filtered->data[x.offset], &zero_float, 4);
   memcpy(&filtered->data[y.offset], &zero_float, 4);
   memcpy(&filtered->data[z.offset], &zero_float, 4);
@@ -135,13 +119,6 @@ void TemperatureDisplay::processMessage(const sensor_msgs::msg::Temperature::Con
 void TemperatureDisplay::update(float wall_dt, float ros_dt)
 {
   point_cloud_common_->update(wall_dt, ros_dt);
-
-  // Hide unneeded properties
-  /*subProp("Position Transformer")->hide();
-  subProp("Color Transformer")->hide();
-  subProp("Channel Name")->hide();
-  subProp("Invert Rainbow")->hide();
-  subProp("Autocompute Intensity Bounds")->hide();*/
 }
 
 void TemperatureDisplay::reset()
@@ -156,8 +133,8 @@ void TemperatureDisplay::onDisable()
   point_cloud_common_->onDisable();
 }
 
-} // namespace deisplays
-} // namespace rviz_default_plugins
+}  // namespace displays
+}  // namespace rviz_default_plugins
 
 #include <pluginlib/class_list_macros.hpp> // NOLINT
 PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::TemperatureDisplay, rviz_common::Display)

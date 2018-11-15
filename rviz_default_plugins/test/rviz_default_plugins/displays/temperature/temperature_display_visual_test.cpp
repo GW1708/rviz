@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2017, Bosch Software Innovations GmbH.
+ * Copyright (c) 2018, Maximilian Kuehn
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,11 +51,5 @@ TEST_F(VisualTestFixture, temperature_displayed_by_one_big_sphere) {
   temperature_display->setSizeMeters(11);
   temperature_display->setColor(0, 255, 0);
 
-  /// Take the screenshots of the desired render windows:
-  captureMainWindow();
-
-  /// Compare test screenshots with the reference ones (if in TEST mode):
-  assertScreenShotsIdentity();
-
-  //assertMainWindowIdentity();
+  assertMainWindowIdentity();
 }
