@@ -880,6 +880,22 @@ if(BUILD_TESTING)
       rviz_visual_testing_framework::rviz_visual_testing_framework)
   endif()
 
+  ament_add_gtest(temperature_display_visual_test
+          test/rviz_default_plugins/displays/temperature/temperature_display_visual_test.cpp
+          test/rviz_default_plugins/page_objects/temperature_display_page_object.cpp
+          test/rviz_default_plugins/page_objects/point_cloud_common_page_object.cpp
+          test/rviz_default_plugins/pointcloud_messages.cpp
+          ${SKIP_VISUAL_TESTS}
+          TIMEOUT 180)
+  if(TARGET temperature_display_visual_test)
+    target_include_directories(temperature_display_visual_test PUBLIC
+            ${TEST_INCLUDE_DIRS}
+            ${rviz_visual_testing_framework_INCLUDE_DIRS})
+    target_link_libraries(temperature_display_visual_test
+            ${TEST_LINK_LIBRARIES}
+            rviz_visual_testing_framework::rviz_visual_testing_framework)
+  endif()
+
   ament_add_gtest(tf_display_visual_test
     test/rviz_default_plugins/displays/tf/tf_display_visual_test.cpp
     test/rviz_default_plugins/page_objects/tf_display_page_object.cpp
