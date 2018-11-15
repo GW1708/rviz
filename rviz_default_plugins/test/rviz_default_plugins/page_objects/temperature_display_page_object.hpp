@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, Bosch Software Innovations GmbH.
+ * Copyright (c) 2018, Maximilian Kuehn
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,9 +38,9 @@
 class TemperatureDisplayPageObject : public PointCloudCommonPageObject
 {
 public:
-    TemperatureDisplayPageObject();
+  TemperatureDisplayPageObject();
 
-    void setQueueSize(int queue_size);
+  void setQueueSize(int queue_size);
 };
 
 #endif  // RVIZ_DEFAULT_PLUGINS__PAGE_OBJECTS__TEMPERATURE_DISPLAY_PAGE_OBJECT_HPP_

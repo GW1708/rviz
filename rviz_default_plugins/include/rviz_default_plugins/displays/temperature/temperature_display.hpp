@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, Willow Garage, Inc.
+ * Copyright (c) 2018, Maximilian Kuehn
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,8 +49,8 @@ namespace rviz_common
 namespace properties
 {
 class IntProperty;
-} // namespace properties
-} // namespace rviz_common
+}  // namespace properties
+}  // namespace rviz_common
 
 namespace rviz_default_plugins
 {
@@ -59,12 +60,12 @@ class PointCloudCommon;
 namespace displays
 {
 
-
 /**
  * \class TemperatureDisplay
  * \brief Displays a Temperature message of type sensor_msgs::Temperature
  *
  */
+
 class RVIZ_DEFAULT_PLUGINS_PUBLIC TemperatureDisplay : public
   rviz_common::RosTopicDisplay<sensor_msgs::msg::Temperature>   // !!! message Type
 {
@@ -74,22 +75,20 @@ public:
   TemperatureDisplay();
   ~TemperatureDisplay();
 
-  virtual void reset() override;
-  virtual void update(float wall_dt, float ros_dt) override;
+  void reset() override;
+  void update(float wall_dt, float ros_dt) override;
   void onDisable() override;
+  void processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message) override;
 
 protected:
-  virtual void onInitialize() override;
-  virtual void processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message) override;
-
-//private Q_SLOTS:
-//  void updateQueueSize();
+  void onInitialize() override;
 
 private:
   std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
-  std::unique_ptr<PointCloudCommon> point_cloud_common_;
+  std::shared_ptr<PointCloudCommon> point_cloud_common_;
 };
-}
-}
 
-#endif // RVIZ_DEFAULT_PLUGINS__DISPLAYS__TEMPERATURE__TEMPERATURE_DISPLAY_HPP_
+}  // namespace displays
+}  // namespace rviz_default_plugins
+
+#endif  // RVIZ_DEFAULT_PLUGINS__DISPLAYS__TEMPERATURE__TEMPERATURE_DISPLAY_HPP_

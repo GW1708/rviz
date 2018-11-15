@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, Bosch Software Innovations GmbH.
+ * Copyright (c) 2018, Maximilian Kuehn
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +36,7 @@
 #include <QTest>  // NOLINT
 
 TemperatureDisplayPageObject::TemperatureDisplayPageObject()
-        : PointCloudCommonPageObject("Temperature")
+: PointCloudCommonPageObject("Temperature")
 {}
 
 void TemperatureDisplayPageObject::setQueueSize(int queue_size)
