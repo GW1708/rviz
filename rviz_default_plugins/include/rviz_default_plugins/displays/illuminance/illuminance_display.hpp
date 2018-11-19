@@ -46,10 +46,10 @@
 
 namespace rviz_common
 {
-    namespace properties
-    {
-        class IntProperty;
-    }  // namespace properties
+namespace properties
+{
+class IntProperty;
+}      // namespace properties
 }  // namespace rviz_common
 
 namespace rviz_default_plugins
@@ -67,28 +67,28 @@ namespace displays
  */
 
 class RVIZ_DEFAULT_PLUGINS_PUBLIC IlluminanceDisplay
-: public rviz_common::RosTopicDisplay<sensor_msgs::msg::Illuminance>
+  : public rviz_common::RosTopicDisplay<sensor_msgs::msg::Illuminance>
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    IlluminanceDisplay();
-    ~IlluminanceDisplay();
+  IlluminanceDisplay();
+  ~IlluminanceDisplay();
 
-    void reset() override;
-    void update(float wall_dt, float ros_dt) override;
-    void onDisable() override;
-    void processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message) override;
+  void reset() override;
+  void update(float wall_dt, float ros_dt) override;
+  void onDisable() override;
+  void processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message) override;
 
 protected:
-    void onInitialize() override;
+  void onInitialize() override;
 
 private:
-    std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
-    std::shared_ptr<PointCloudCommon> point_cloud_common_;
+  std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
+  std::shared_ptr<PointCloudCommon> point_cloud_common_;
 };
 
 }  // namespace displays
 }  // namespace rviz_default_plugins
 
-#endif // RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_
+#endif  // RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_
