@@ -3,6 +3,16 @@
   <!-- Displays plugins -->
 
   <class
+          name="rviz_default_plugins/Axes"
+          type="rviz_default_plugins::displays::AxesDisplay"
+          base_class_type="rviz_common::Display"
+  >
+    <description>
+      Displays a set of XYZ axes at the origin of a chosen frame
+    </description>
+  </class>
+
+  <class
     name="rviz_default_plugins/Camera"
     type="rviz_default_plugins::displays::CameraDisplay"
     base_class_type="rviz_common::Display"
