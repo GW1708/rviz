@@ -636,6 +636,23 @@ if(BUILD_TESTING)
       rviz_visual_testing_framework::rviz_visual_testing_framework)
   endif()
 
+  ament_add_gtest(illuminance_display_visual_test
+          test/rviz_default_plugins/displays/illuminance/illuminance_display_visual_test.cpp
+          test/rviz_default_plugins/page_objects/illuminance_display_page_object.cpp
+          test/rviz_default_plugins/publishers/illuminance_publisher.hpp
+          test/rviz_default_plugins/page_objects/point_cloud_common_page_object.cpp
+          test/rviz_default_plugins/pointcloud_messages.cpp
+          ${SKIP_VISUAL_TESTS}
+          TIMEOUT 180)
+  if(TARGET illuminance_display_visual_test)
+    target_include_directories(illuminance_display_visual_test PUBLIC
+            ${TEST_INCLUDE_DIRS}
+            ${rviz_visual_testing_framework_INCLUDE_DIRS})
+    target_link_libraries(illuminance_display_visual_test
+            ${TEST_LINK_LIBRARIES}
+            rviz_visual_testing_framework::rviz_visual_testing_framework)
+  endif()
+
   ament_add_gtest(image_display_visual_test
     test/rviz_default_plugins/displays/image/image_display_visual_test.cpp
     test/rviz_default_plugins/page_objects/image_display_page_object.cpp
