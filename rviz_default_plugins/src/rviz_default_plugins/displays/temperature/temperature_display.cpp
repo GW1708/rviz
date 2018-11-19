@@ -65,6 +65,13 @@ void TemperatureDisplay::onInitialize()
 {
   RTDClass::onInitialize();
   point_cloud_common_->initialize(context_, scene_node_);
+
+  // Set correct initial values
+  subProp("Channel Name")->setValue("temperature");
+  subProp("Autocompute Intensity Bounds")->setValue(false);
+  subProp("Invert Rainbow")->setValue(true);
+  subProp("Min Intensity")->setValue(0); // Water Freezing
+  subProp("Max Intensity")->setValue(100); // Water Boiling
 }
 
 void TemperatureDisplay::processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message)
@@ -119,6 +126,13 @@ void TemperatureDisplay::processMessage(const sensor_msgs::msg::Temperature::Con
 void TemperatureDisplay::update(float wall_dt, float ros_dt)
 {
   point_cloud_common_->update(wall_dt, ros_dt);
+
+  // Hide unneeded properties
+  subProp("Position Transformer")->hide();
+  subProp("Color Transformer")->hide();
+  subProp("Channel Name")->hide();
+  subProp("Invert Rainbow")->hide();
+  subProp("Autocompute Intensity Bounds")->hide();
 }
 
 void TemperatureDisplay::reset()
