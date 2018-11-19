@@ -45,46 +45,46 @@ using namespace std::chrono_literals; //NOLINT
 namespace nodes
 {
 
-    sensor_msgs::msg::RelativeHumidity createRelativeHumidity(float press, float var)
-    {
-      sensor_msgs::msg::RelativeHumidity relativeHumidity;
-      relativeHumidity.relative_humidity = press;
-      relativeHumidity.variance = var;
+sensor_msgs::msg::RelativeHumidity createRelativeHumidity(float press, float var)
+{
+  sensor_msgs::msg::RelativeHumidity relativeHumidity;
+  relativeHumidity.relative_humidity = press;
+  relativeHumidity.variance = var;
 
-      return relativeHumidity;
-    }
+  return relativeHumidity;
+}
 
-    class RelativeHumidityPublisher : public rclcpp::Node
-    {
-    public:
-        RelativeHumidityPublisher()
-                : Node("relative_humidity_publisher"),
-                  count_(0)
-        {
-          publisher_ = this->create_publisher<sensor_msgs::msg::RelativeHumidity>("relative_humidity");
+class RelativeHumidityPublisher : public rclcpp::Node
+{
+public:
+  RelativeHumidityPublisher()
+  : Node("relative_humidity_publisher"),
+    count_(0)
+  {
+    publisher_ = this->create_publisher<sensor_msgs::msg::RelativeHumidity>("relative_humidity");
 
-          auto timer_callback =
-                  [this]() -> void {
-                      auto message = sensor_msgs::msg::RelativeHumidity();
+    auto timer_callback =
+      [this]() -> void {
+        auto message = sensor_msgs::msg::RelativeHumidity();
 
-                      message.header = std_msgs::msg::Header();
-                      message.header.frame_id = "relative_humidity_frame";
-                      message.header.stamp = rclcpp::Clock().now();
+        message.header = std_msgs::msg::Header();
+        message.header.frame_id = "relative_humidity_frame";
+        message.header.stamp = rclcpp::Clock().now();
 
-                      message.relative_humidity = 20.0;
-                      message.variance = 1.0;
+        message.relative_humidity = 20.0;
+        message.variance = 1.0;
 
-                      this->publisher_->publish(message);
-                  };
-          timer_ = this->create_wall_timer(500ms, timer_callback);
-        }
+        this->publisher_->publish(message);
+      };
+    timer_ = this->create_wall_timer(500ms, timer_callback);
+  }
 
-    private:
-        rclcpp::TimerBase::SharedPtr timer_;
-        rclcpp::Publisher<sensor_msgs::msg::RelativeHumidity>::SharedPtr publisher_;
-        size_t count_;
-    };
+private:
+  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Publisher<sensor_msgs::msg::RelativeHumidity>::SharedPtr publisher_;
+  size_t count_;
+};
 
 }  // namespace nodes
 
-#endif // RVIZ_DEFAULT_PLUGINS__PUBLISHERS__RELATIVE_HUMIDITY_PUBLISHER_HPP_
+#endif  // RVIZ_DEFAULT_PLUGINS__PUBLISHERS__RELATIVE_HUMIDITY_PUBLISHER_HPP_

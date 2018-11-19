@@ -38,9 +38,9 @@
 class RelativeHumidityDisplayPageObject : public PointCloudCommonPageObject
 {
 public:
-    RelativeHumidityDisplayPageObject();
+  RelativeHumidityDisplayPageObject();
 
-    void setQueueSize(int queue_size);
+  void setQueueSize(int queue_size);
 };
 
-#endif // RVIZ_DEFAULT_PLUGINS__PAGE_OBJECTS__RELATIVE_HUMIDITY_DISPLAY_PAGE_OBJECT_HPP_
+#endif  // RVIZ_DEFAULT_PLUGINS__PAGE_OBJECTS__RELATIVE_HUMIDITY_DISPLAY_PAGE_OBJECT_HPP_

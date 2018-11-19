@@ -39,8 +39,8 @@
 
 TEST_F(VisualTestFixture, relative_humidity_displayed_by_one_big_sphere) {
   auto relative_humidity_publisher =
-          std::make_unique<VisualTestPublisher>(
-                  std::make_shared<nodes::RelativeHumidityPublisher>(), "relative_humidity_frame");
+    std::make_unique<VisualTestPublisher>(
+    std::make_shared<nodes::RelativeHumidityPublisher>(), "relative_humidity_frame");
 
   setCamPose(Ogre::Vector3(0, 0, 16));
   setCamLookAt(Ogre::Vector3(0, 0, 0));

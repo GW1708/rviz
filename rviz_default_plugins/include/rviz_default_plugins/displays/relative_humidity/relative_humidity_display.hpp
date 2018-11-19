@@ -43,19 +43,19 @@
 
 namespace rviz_common
 {
-    namespace properties
-    {
-        class IntProperty;
-    }    // namespace properties
+namespace properties
+{
+class IntProperty;
+}        // namespace properties
 }  // namespace rviz_common
 
 namespace rviz_default_plugins
 {
 
-    class PointCloudCommon;
+class PointCloudCommon;
 
-    namespace displays
-    {
+namespace displays
+{
 
 /**
  * \class
@@ -63,29 +63,29 @@ namespace rviz_default_plugins
  *
  */
 
-        class RVIZ_DEFAULT_PLUGINS_PUBLIC RelativeHumidityDisplay : public
-                                                                 rviz_common::RosTopicDisplay<sensor_msgs::msg::RelativeHumidity>
-        {
-        Q_OBJECT
+class RVIZ_DEFAULT_PLUGINS_PUBLIC RelativeHumidityDisplay : public
+  rviz_common::RosTopicDisplay<sensor_msgs::msg::RelativeHumidity>
+{
+  Q_OBJECT
 
-        public:
-            RelativeHumidityDisplay();
-            ~RelativeHumidityDisplay();
+public:
+  RelativeHumidityDisplay();
+  ~RelativeHumidityDisplay();
 
-            void reset() override;
-            void update(float wall_dt, float ros_dt) override;
-            void onDisable() override;
-            void processMessage(const sensor_msgs::msg::RelativeHumidity::ConstSharedPtr msg) override;
+  void reset() override;
+  void update(float wall_dt, float ros_dt) override;
+  void onDisable() override;
+  void processMessage(const sensor_msgs::msg::RelativeHumidity::ConstSharedPtr msg) override;
 
-        protected:
-            void onInitialize() override;
+protected:
+  void onInitialize() override;
 
-        private:
-            std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
-            std::shared_ptr<PointCloudCommon> point_cloud_common_;
-        };
+private:
+  std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
+  std::shared_ptr<PointCloudCommon> point_cloud_common_;
+};
 
-    }  // namespace displays
+}      // namespace displays
 }  // namespace rviz_default_plugins
 
-#endif // RVIZ_DEFAULT_PLUGINS__DISPLAYS__RELATIVE_HUMIDITY__RELATIVE_HUMIDITY_DISPLAY_HPP_
+#endif  // RVIZ_DEFAULT_PLUGINS__DISPLAYS__RELATIVE_HUMIDITY__RELATIVE_HUMIDITY_DISPLAY_HPP_

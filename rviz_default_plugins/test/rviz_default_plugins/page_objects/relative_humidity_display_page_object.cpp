@@ -36,7 +36,7 @@
 #include <QTest>  // NOLINT
 
 RelativeHumidityDisplayPageObject::RelativeHumidityDisplayPageObject()
-        : PointCloudCommonPageObject("RelativeHumidity")
+: PointCloudCommonPageObject("RelativeHumidity")
 {}
 
 void RelativeHumidityDisplayPageObject::setQueueSize(int queue_size)
