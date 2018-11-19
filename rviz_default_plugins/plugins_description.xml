@@ -36,6 +36,17 @@
   </class>
 
   <class
+          name="rviz_default_plugins/Illuminance"
+          type="rviz_default_plugins::displays::IlluminanceDisplay"
+          base_class_type="rviz_common::Display"
+  >
+    <description>
+      Displays data from a nav_msgs::Illuminance as pointcloud with one point
+    </description>
+    <message_type>nav_msgs/Illuminance</message_type>
+  </class>
+
+  <class
     name="rviz_default_plugins/Image"
     type="rviz_default_plugins::displays::ImageDisplay"
     base_class_type="rviz_common::Display"
