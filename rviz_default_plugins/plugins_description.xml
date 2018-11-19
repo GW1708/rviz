@@ -122,6 +122,16 @@
   </class>
 
   <class
+          name="rviz_default_plugins/RelativeHumidity"
+          type="rviz_default_plugins::displays::RelativeHumidityDisplay"
+          base_class_type="rviz_common::Display">
+    <description>
+      Displays the data from nav_msgs::RelativeHumidity messages as point cloud with one point
+    </description>
+    <message_type>sensor_msgs/Range</message_type>
+  </class>
+
+  <class
     name="rviz_default_plugins/RobotModel"
     type="rviz_default_plugins::displays::RobotModelDisplay"
     base_class_type="rviz_common::Display"
