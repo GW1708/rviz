@@ -96,4 +96,4 @@ private:
 }      // namespace displays
 }  // namespace rviz_default_plugins
 
-#endif // RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_
+#endif  // RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_

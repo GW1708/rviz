@@ -93,4 +93,4 @@ void IlluminancePublisher::setIlluminance(float illuminance)
 
 }  // namespace nodes
 
-#endif // RVIZ_DEFAULT_PLUGINS__PUBLISHERS__ILLUMINANCE_PUBLISHER_HPP_
+#endif  // RVIZ_DEFAULT_PLUGINS__PUBLISHERS__ILLUMINANCE_PUBLISHER_HPP_
