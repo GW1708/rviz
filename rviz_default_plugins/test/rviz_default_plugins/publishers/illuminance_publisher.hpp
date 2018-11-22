@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2017, Bosch Software Innovations GmbH.
- * Copyright (c) 2018, Maximilian Kuehn
+ * Copyright (c) 2018, TNG Technology Consulting GmbH.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,59 +32,65 @@
 #define RVIZ_DEFAULT_PLUGINS__PUBLISHERS__ILLUMINANCE_PUBLISHER_HPP_
 
 #include <string>
-
 #include <chrono>
+
 #include "rclcpp/rclcpp.hpp"
+
 #include "sensor_msgs/msg/illuminance.hpp"
 #include "std_msgs/msg/header.hpp"
-
-#include "../pointcloud_messages.hpp"
 
 using namespace std::chrono_literals; //NOLINT
 
 namespace nodes
 {
 
-sensor_msgs::msg::Illuminance createIlluminance(float ill, float var)
-{
-  sensor_msgs::msg::Illuminance illuminance;
-  illuminance.illuminance = ill;
-  illuminance.variance = var;
-
-  return illuminance;
-}
-
 class IlluminancePublisher : public rclcpp::Node
 {
 public:
-  IlluminancePublisher()
-  : Node("illuminance_publisher"),
-    count_(0)
-  {
-    publisher_ = this->create_publisher<sensor_msgs::msg::Illuminance>("illuminance");
-
-    auto timer_callback =
-      [this]() -> void {
-        auto message = sensor_msgs::msg::Illuminance();
-
-        message.header = std_msgs::msg::Header();
-        message.header.frame_id = "illuminance_frame";
-        message.header.stamp = rclcpp::Clock().now();
-
-        message.illuminance = 20.0;
-        message.variance = 1.0;
-
-        this->publisher_->publish(message);
-      };
-    timer_ = this->create_wall_timer(500ms, timer_callback);
-  }
+  IlluminancePublisher();
+  void setIlluminance(float illuminance);
 
 private:
+  sensor_msgs::msg::Illuminance createIlluminanceMessage();
+
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<sensor_msgs::msg::Illuminance>::SharedPtr publisher_;
-  size_t count_;
+
+  float illuminance_;
 };
+
+IlluminancePublisher::IlluminancePublisher()
+: Node("illuminance_publisher"), illuminance_(0.)
+{
+  publisher_ = this->create_publisher<sensor_msgs::msg::Illuminance>("illuminance");
+
+  auto timer_callback =
+    [this]() -> void {
+      auto message = createIlluminanceMessage();
+      this->publisher_->publish(message);
+    };
+  timer_ = this->create_wall_timer(500ms, timer_callback);
+}
+
+sensor_msgs::msg::Illuminance IlluminancePublisher::createIlluminanceMessage()
+{
+  sensor_msgs::msg::Illuminance illuminanceMessage;
+
+  illuminanceMessage.header = std_msgs::msg::Header();
+  illuminanceMessage.header.frame_id = "illuminance_frame";
+  illuminanceMessage.header.stamp = rclcpp::Clock().now();
+
+  illuminanceMessage.illuminance = illuminance_;
+  illuminanceMessage.variance = 1.0;
+
+  return illuminanceMessage;
+}
+
+void IlluminancePublisher::setIlluminance(float illuminance)
+{
+  illuminance_ = illuminance;
+}
 
 }  // namespace nodes
 
-#endif  // RVIZ_DEFAULT_PLUGINS__PUBLISHERS__ILLUMINANCE_PUBLISHER_HPP_
+#endif // RVIZ_DEFAULT_PLUGINS__PUBLISHERS__ILLUMINANCE_PUBLISHER_HPP_

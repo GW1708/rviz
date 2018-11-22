@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2017, Bosch Software Innovations GmbH.
- * Copyright (c) 2018, Maximilian Kuehn
+ * Copyright (c) 2018, TNG Technology Consulting GmbH.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,10 +37,11 @@
 #include "../../page_objects/illuminance_display_page_object.hpp"
 #include "../../publishers/illuminance_publisher.hpp"
 
-TEST_F(VisualTestFixture, illuminance_displayed_by_one_big_sphere) {
-  auto illuminance_publisher =
+TEST_F(VisualTestFixture, sphere_changes_color_depending_on_illuminance) {
+  auto illuminance_publisher = std::make_shared<nodes::IlluminancePublisher>();
+  auto illuminance_visual_publisher =
     std::make_unique<VisualTestPublisher>(
-    std::make_shared<nodes::IlluminancePublisher>(), "illuminance_frame");
+    illuminance_publisher, "illuminance_frame");
 
   setCamPose(Ogre::Vector3(0, 0, 16));
   setCamLookAt(Ogre::Vector3(0, 0, 0));
@@ -49,7 +50,20 @@ TEST_F(VisualTestFixture, illuminance_displayed_by_one_big_sphere) {
   illuminance_display->setTopic("/illuminance");
   illuminance_display->setStyle("Spheres");
   illuminance_display->setSizeMeters(11);
-  illuminance_display->setColor(0, 255, 0);
 
-  assertMainWindowIdentity();
+  illuminance_publisher->setIlluminance(15);
+  captureMainWindow("illuminance_display_low_illuminance");
+
+  executor_->queueAction([illuminance_publisher]()
+    {
+      illuminance_publisher->setIlluminance(85);
+    });
+
+  captureMainWindow("illuminance_display_high_illuminance");
+  assertScreenShotsIdentity();
+
+  /* Minimum and Maximum Illuminance have small color contrast
+   * because it is purple and red respectively
+   * therefore use low and high illuminance for nice orange blue contrast
+   */
 }
