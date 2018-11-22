@@ -40,11 +40,11 @@
 #include "rclcpp/clock.hpp"
 #include "rclcpp/time.hpp"
 
-#include "rviz_default_plugins/displays/pointcloud/point_cloud_common.hpp"
 #include "rviz_common/display_context.hpp"
 #include "rviz_common/frame_manager_iface.hpp"
 #include "rviz_common/properties/queue_size_property.hpp"
 #include "rviz_common/validate_floats.hpp"
+#include "rviz_default_plugins/displays/pointcloud/point_cloud_common.hpp"
 #include "rviz_rendering/objects/point_cloud.hpp"
 
 namespace rviz_default_plugins

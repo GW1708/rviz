@@ -70,7 +70,7 @@ public:
   void processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message) override;
 
   std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloudMessageFromTemperatureMessage(
-          const sensor_msgs::msg::Temperature::ConstSharedPtr message);
+    const sensor_msgs::msg::Temperature::ConstSharedPtr message);
 
 protected:
   void onInitialize() override;

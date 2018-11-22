@@ -38,7 +38,6 @@
 #include "../../publishers/temperature_publisher.hpp"
 
 TEST_F(VisualTestFixture, sphere_changes_color_depending_on_temperature) {
-
   auto temperature_publisher = std::make_shared<nodes::TemperaturePublisher>();
   auto temperature_visual_publisher =
     std::make_unique<VisualTestPublisher>(
@@ -56,9 +55,9 @@ TEST_F(VisualTestFixture, sphere_changes_color_depending_on_temperature) {
   captureMainWindow("temperature_display_low_temperature");
 
   executor_->queueAction([temperature_publisher]()
-  {
+    {
       temperature_publisher->setTemperature(85);
-  });
+    });
 
   captureMainWindow("temperature_display_high_temperature");
   assertScreenShotsIdentity();

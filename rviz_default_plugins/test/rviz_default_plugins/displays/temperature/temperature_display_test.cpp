@@ -50,7 +50,7 @@
 using namespace ::testing;  // NOLINT
 
 sensor_msgs::msg::Temperature::ConstSharedPtr createTemperatureMessage(
-        const float temperature = 0., const float variance = 1.)
+  const float temperature = 0., const float variance = 1.)
 {
   auto message = std::make_shared<sensor_msgs::msg::Temperature>();
   message->header = std_msgs::msg::Header();

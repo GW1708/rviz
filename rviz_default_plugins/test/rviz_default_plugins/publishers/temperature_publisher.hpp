@@ -39,7 +39,7 @@
 #include "sensor_msgs/msg/temperature.hpp"
 #include "std_msgs/msg/header.hpp"
 
-#include "../pointcloud_messages.hpp"
+// #include "../pointcloud_messages.hpp"
 
 using namespace std::chrono_literals; //NOLINT
 
@@ -67,10 +67,10 @@ TemperaturePublisher::TemperaturePublisher()
   publisher_ = this->create_publisher<sensor_msgs::msg::Temperature>("temperature");
 
   auto timer_callback =
-          [this]() -> void {
-              auto message = createTemperatureMessage();
-              this->publisher_->publish(message);
-          };
+    [this]() -> void {
+      auto message = createTemperatureMessage();
+      this->publisher_->publish(message);
+    };
   timer_ = this->create_wall_timer(500ms, timer_callback);
 }
 
