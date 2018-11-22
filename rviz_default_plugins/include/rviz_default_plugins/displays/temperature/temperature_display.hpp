@@ -69,13 +69,13 @@ public:
   void onDisable() override;
   void processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message) override;
 
+  std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloudMessageFromTemperatureMessage(
+          const sensor_msgs::msg::Temperature::ConstSharedPtr message);
+
 protected:
   void onInitialize() override;
 
 private:
-  std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloudMessageFromTemperatureMessage(
-    const sensor_msgs::msg::Temperature::ConstSharedPtr message);
-
   void resetFieldSizeTotal();
   void setInitialValues();
   void hideUnneededProperties();
