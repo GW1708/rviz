@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Bosch Software Innovations GmbH.
- * Copyright (c) 2018, Maximilian Kuehn
+ * Copyright (c) 2018, TNG Technology Consulting GmbH.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

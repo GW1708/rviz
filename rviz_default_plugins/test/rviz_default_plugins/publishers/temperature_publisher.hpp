@@ -46,7 +46,44 @@ using namespace std::chrono_literals; //NOLINT
 namespace nodes
 {
 
-sensor_msgs::msg::Temperature createTemperatureMessage(float temperature, float variance)
+class TemperaturePublisher : public rclcpp::Node
+{
+public:
+  TemperaturePublisher()
+  : Node("temperature_publisher"),
+    temperature_(0.), variance_(1.)
+  {
+    publisher_ = this->create_publisher<sensor_msgs::msg::Temperature>("temperature");
+
+    auto timer_callback =
+      [this]() -> void {
+        auto message = createTemperatureMessage();
+        this->publisher_->publish(message);
+      };
+    timer_ = this->create_wall_timer(500ms, timer_callback);
+  }
+
+  void setTemperature(float temperature)
+  {
+    temperature_ = temperature;
+  }
+
+  void setVariance(float variance)
+  {
+    variance_ = variance;
+  }
+
+private:
+  sensor_msgs::msg::Temperature createTemperatureMessage();
+
+  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Publisher<sensor_msgs::msg::Temperature>::SharedPtr publisher_;
+
+  float temperature_;
+  float variance_;
+};
+
+sensor_msgs::msg::Temperature TemperaturePublisher::createTemperatureMessage()
 {
   sensor_msgs::msg::Temperature temperatureMessage;
 
@@ -54,32 +91,11 @@ sensor_msgs::msg::Temperature createTemperatureMessage(float temperature, float 
   temperatureMessage.header.frame_id = "temperature_frame";
   temperatureMessage.header.stamp = rclcpp::Clock().now();
 
-  temperatureMessage.temperature = temperature;
-  temperatureMessage.variance = variance;
+  temperatureMessage.temperature = temperature_;
+  temperatureMessage.variance = variance_;
 
   return temperatureMessage;
 }
-
-class TemperaturePublisher : public rclcpp::Node
-{
-public:
-  TemperaturePublisher()
-  : Node("temperature_publisher")
-  {
-    publisher_ = this->create_publisher<sensor_msgs::msg::Temperature>("temperature");
-
-    auto timer_callback =
-      [this]() -> void {
-        auto message = createTemperatureMessage(20., 1.);
-        this->publisher_->publish(message);
-      };
-    timer_ = this->create_wall_timer(500ms, timer_callback);
-  }
-
-private:
-  rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<sensor_msgs::msg::Temperature>::SharedPtr publisher_;
-};
 
 }  // namespace nodes
 
