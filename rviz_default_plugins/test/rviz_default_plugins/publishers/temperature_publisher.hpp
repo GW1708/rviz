@@ -49,29 +49,8 @@ namespace nodes
 class TemperaturePublisher : public rclcpp::Node
 {
 public:
-  TemperaturePublisher()
-  : Node("temperature_publisher"),
-    temperature_(0.), variance_(1.)
-  {
-    publisher_ = this->create_publisher<sensor_msgs::msg::Temperature>("temperature");
-
-    auto timer_callback =
-      [this]() -> void {
-        auto message = createTemperatureMessage();
-        this->publisher_->publish(message);
-      };
-    timer_ = this->create_wall_timer(500ms, timer_callback);
-  }
-
-  void setTemperature(float temperature)
-  {
-    temperature_ = temperature;
-  }
-
-  void setVariance(float variance)
-  {
-    variance_ = variance;
-  }
+  TemperaturePublisher();
+  void setTemperature(float temperature);
 
 private:
   sensor_msgs::msg::Temperature createTemperatureMessage();
@@ -80,8 +59,20 @@ private:
   rclcpp::Publisher<sensor_msgs::msg::Temperature>::SharedPtr publisher_;
 
   float temperature_;
-  float variance_;
 };
+
+TemperaturePublisher::TemperaturePublisher()
+: Node("temperature_publisher"), temperature_(0.)
+{
+  publisher_ = this->create_publisher<sensor_msgs::msg::Temperature>("temperature");
+
+  auto timer_callback =
+          [this]() -> void {
+              auto message = createTemperatureMessage();
+              this->publisher_->publish(message);
+          };
+  timer_ = this->create_wall_timer(500ms, timer_callback);
+}
 
 sensor_msgs::msg::Temperature TemperaturePublisher::createTemperatureMessage()
 {
@@ -92,9 +83,14 @@ sensor_msgs::msg::Temperature TemperaturePublisher::createTemperatureMessage()
   temperatureMessage.header.stamp = rclcpp::Clock().now();
 
   temperatureMessage.temperature = temperature_;
-  temperatureMessage.variance = variance_;
+  temperatureMessage.variance = 1.0;
 
   return temperatureMessage;
+}
+
+void TemperaturePublisher::setTemperature(float temperature)
+{
+  temperature_ = temperature;
 }
 
 }  // namespace nodes

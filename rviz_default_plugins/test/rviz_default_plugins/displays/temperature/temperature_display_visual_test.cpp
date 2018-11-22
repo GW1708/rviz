@@ -53,18 +53,18 @@ TEST_F(VisualTestFixture, sphere_changes_color_depending_on_temperature) {
   temperature_display->setSizeMeters(11);
 
   temperature_publisher->setTemperature(15);
-  temperature_publisher->setVariance(1.);
   captureMainWindow("temperature_display_low_temperature");
-  assertScreenShotsIdentity();
 
-  temperature_publisher->setTemperature(85);
-  temperature_publisher->setVariance(5.);
+  executor_->queueAction([temperature_publisher]()
+  {
+      temperature_publisher->setTemperature(85);
+  });
+
   captureMainWindow("temperature_display_high_temperature");
   assertScreenShotsIdentity();
 
   /* Minimum and Maximum Temperature have small color contrast
    * because it is purple and red respectively
    * therefore use low and high temperature for nice orange blue contrast
-   * variance should not influence the color so far
    */
 }
