@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012, Willow Garage, Inc.
- * Copyright (c) 2018, Maximilian Kuehn
+ * Copyright (c) 2018, TNG Technology Consulting GmbH.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,21 +31,21 @@
 #include "rviz_default_plugins/displays/illuminance/illuminance_display.hpp"
 
 #include <memory>
+#include <string>
+#include <iostream>
 
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
 #include "rclcpp/clock.hpp"
 #include "rclcpp/time.hpp"
-#include "rviz_default_plugins/displays/pointcloud/point_cloud_common.hpp"
-#include "rviz_default_plugins/displays/pointcloud/point_cloud_transformer.hpp"
+
 #include "rviz_common/display_context.hpp"
 #include "rviz_common/frame_manager_iface.hpp"
-#include "rviz_rendering/objects/point_cloud.hpp"
-
 #include "rviz_common/properties/queue_size_property.hpp"
 #include "rviz_common/validate_floats.hpp"
-
+#include "rviz_default_plugins/displays/pointcloud/point_cloud_common.hpp"
+#include "rviz_rendering/objects/point_cloud.hpp"
 
 namespace rviz_default_plugins
 {
@@ -55,81 +55,119 @@ namespace displays
 
 IlluminanceDisplay::IlluminanceDisplay()
 : queue_size_property_(new rviz_common::QueueSizeProperty(this, 10)),
-  point_cloud_common_(new PointCloudCommon(this))
+  point_cloud_common_(new PointCloudCommon(this)),
+  field_size_total_(0)
 {}
 
-IlluminanceDisplay::~IlluminanceDisplay()
-{}
+IlluminanceDisplay::~IlluminanceDisplay() = default;
 
 void IlluminanceDisplay::onInitialize()
 {
   RTDClass::onInitialize();
   point_cloud_common_->initialize(context_, scene_node_);
+  setInitialValues();
+}
 
-  // Set correct initial values
+void IlluminanceDisplay::setInitialValues()
+{
   subProp("Channel Name")->setValue("illuminance");
   subProp("Autocompute Intensity Bounds")->setValue(false);
-  subProp("Min Intensity")->setValue(0);
-  subProp("Max Intensity")->setValue(1000);
+  subProp("Invert Rainbow")->setValue(true);
+  subProp("Min Intensity")->setValue(0);            // Water Freezing
+  subProp("Max Intensity")->setValue(100);          // Water Boiling
 }
 
 void IlluminanceDisplay::processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message)
 {
-  auto filtered = std::make_shared<sensor_msgs::msg::PointCloud2>();
+  auto point_cloud_message_for_point_cloud_common =
+    createPointCloudMessageFromIlluminanceMessage(message);
 
-  // Create fields
-  sensor_msgs::msg::PointField x;
-  x.name = "x";
-  x.offset = 0;
-  x.datatype = sensor_msgs::msg::PointField::FLOAT32;
-  x.count = 1;
-  sensor_msgs::msg::PointField y;
-  y.name = "y";
-  y.offset = 4;
-  y.datatype = sensor_msgs::msg::PointField::FLOAT32;
-  y.count = 1;
-  sensor_msgs::msg::PointField z;
-  z.name = "z";
-  z.offset = 8;
-  z.datatype = sensor_msgs::msg::PointField::FLOAT32;
-  z.count = 1;
-  sensor_msgs::msg::PointField illuminance;
-  illuminance.name = "illuminance";
-  illuminance.offset = 12;
-  illuminance.datatype = sensor_msgs::msg::PointField::FLOAT64;
-  illuminance.count = 1;
+  resetFieldSizeTotal();
+  /* field_size_total_ is used to have a general internal variable for all the different point cloud
+   * message methods that need an offset as input.
+   * It increases as more fields are added to the point cloud.
+   * It has to be reset here to avoid SegFault when creating new PointCloudMessages
+   */
 
-  // Create pointcloud from message
-  filtered->header = message->header;
-  filtered->fields.push_back(x);
-  filtered->fields.push_back(y);
-  filtered->fields.push_back(z);
-  filtered->fields.push_back(illuminance);
-  filtered->data.resize(20);
-  const float zero_float = 0.0;    // RelativeHumidity is always on its tf frame
-  memcpy(&filtered->data[x.offset], &zero_float, 4);
-  memcpy(&filtered->data[y.offset], &zero_float, 4);
-  memcpy(&filtered->data[z.offset], &zero_float, 4);
-  memcpy(&filtered->data[illuminance.offset], &message->illuminance, 8);
-  filtered->height = 1;
-  filtered->width = 1;
-  filtered->is_bigendian = false;
-  filtered->point_step = 20;
-  filtered->row_step = 1;
-
-  // Give to point_cloud_common to draw
-  point_cloud_common_->addMessage(filtered);
+  point_cloud_common_->addMessage(point_cloud_message_for_point_cloud_common);
 }
 
+std::shared_ptr<sensor_msgs::msg::PointCloud2>
+IlluminanceDisplay::createPointCloudMessageFromIlluminanceMessage(
+  const sensor_msgs::msg::Illuminance::ConstSharedPtr illuminance_message)
+{
+  auto point_cloud_message = std::make_shared<sensor_msgs::msg::PointCloud2>();
+  const float coordinate_value = 0.0;
+
+  point_cloud_message->header = illuminance_message->header;
+
+  int x_offset = addField32andReturnOffset(point_cloud_message, "x");
+  int y_offset = addField32andReturnOffset(point_cloud_message, "y");
+  int z_offset = addField32andReturnOffset(point_cloud_message, "z");
+  int temp_offset = addField64andReturnOffset(point_cloud_message, "illuminance");
+
+  point_cloud_message->data.resize(field_size_total_);
+
+  memcpy(&point_cloud_message->data[x_offset], &coordinate_value, field_size_32_);
+  memcpy(&point_cloud_message->data[y_offset], &coordinate_value, field_size_32_);
+  memcpy(&point_cloud_message->data[z_offset], &coordinate_value, field_size_32_);
+  memcpy(&point_cloud_message->data[temp_offset], &illuminance_message->illuminance,
+    field_size_64_);
+
+  point_cloud_message->height = 1;
+  point_cloud_message->width = 1;
+  point_cloud_message->is_bigendian = false;
+  point_cloud_message->point_step = field_size_total_;
+  point_cloud_message->row_step = 1;
+
+  return point_cloud_message;
+}
+
+int IlluminanceDisplay::addField32andReturnOffset(
+  std::shared_ptr<sensor_msgs::msg::PointCloud2> point_cloud_message, const std::string field_name)
+{
+  sensor_msgs::msg::PointField field;
+  field.name = field_name;
+  field.offset = field_size_total_;
+  field.datatype = sensor_msgs::msg::PointField::FLOAT32;
+  field.count = 1;
+  point_cloud_message->fields.push_back(field);
+  field_size_total_ += field_size_32_;
+
+  return field.offset;
+}
+
+int IlluminanceDisplay::addField64andReturnOffset(
+  std::shared_ptr<sensor_msgs::msg::PointCloud2> point_cloud_message, const std::string field_name)
+{
+  sensor_msgs::msg::PointField field;
+  field.name = field_name;
+  field.offset = field_size_total_;
+  field.datatype = sensor_msgs::msg::PointField::FLOAT64;
+  field.count = 1;
+  point_cloud_message->fields.push_back(field);
+  field_size_total_ += field_size_64_;
+
+  return field.offset;
+}
+
+void IlluminanceDisplay::resetFieldSizeTotal()
+{
+  field_size_total_ = 0;
+}
 
 void IlluminanceDisplay::update(float wall_dt, float ros_dt)
 {
   point_cloud_common_->update(wall_dt, ros_dt);
+  hideUnneededProperties();
+}
 
-  // Hide unneeded properties
+void IlluminanceDisplay::hideUnneededProperties()
+{
   subProp("Position Transformer")->hide();
   subProp("Color Transformer")->hide();
   subProp("Channel Name")->hide();
+  subProp("Invert Rainbow")->hide();
   subProp("Autocompute Intensity Bounds")->hide();
 }
 
@@ -145,7 +183,7 @@ void IlluminanceDisplay::onDisable()
   point_cloud_common_->onDisable();
 }
 
-}  // namespace displays
+}      // namespace displays
 }  // namespace rviz_default_plugins
 
 #include <pluginlib/class_list_macros.hpp> // NOLINT

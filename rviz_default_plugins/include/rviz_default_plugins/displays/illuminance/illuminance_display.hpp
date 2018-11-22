@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2008, Willow Garage, Inc.
- * Copyright (c) 2018, Maximilian Kuehn
+ * Copyright (c) 2018, TNG Technology Consulting GmbH.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,25 +32,14 @@
 #define RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_
 
 #include <memory>
+#include <string>
 
-#include "sensor_msgs/msg/point_cloud2.hpp"
 #include "sensor_msgs/msg/illuminance.hpp"
+#include "sensor_msgs/msg/point_cloud2.hpp"
 
 #include "rviz_common/ros_topic_display.hpp"
 #include "rviz_common/properties/queue_size_property.hpp"
-#include "rviz_default_plugins/displays/pointcloud/point_cloud_common.hpp"
-
-
 #include "rviz_default_plugins/visibility_control.hpp"
-
-
-namespace rviz_common
-{
-namespace properties
-{
-class IntProperty;
-}      // namespace properties
-}  // namespace rviz_common
 
 namespace rviz_default_plugins
 {
@@ -73,22 +62,38 @@ class RVIZ_DEFAULT_PLUGINS_PUBLIC IlluminanceDisplay
 
 public:
   IlluminanceDisplay();
-  ~IlluminanceDisplay();
+  ~IlluminanceDisplay() override;
 
   void reset() override;
   void update(float wall_dt, float ros_dt) override;
   void onDisable() override;
   void processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message) override;
 
+  std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloudMessageFromIlluminanceMessage(
+    const sensor_msgs::msg::Illuminance::ConstSharedPtr message);
+
 protected:
   void onInitialize() override;
 
 private:
+  void resetFieldSizeTotal();
+  void setInitialValues();
+  void hideUnneededProperties();
+
+  int addField32andReturnOffset(
+    std::shared_ptr<sensor_msgs::msg::PointCloud2>, std::string field_name);
+  int addField64andReturnOffset(
+    std::shared_ptr<sensor_msgs::msg::PointCloud2>, std::string field_name);
+
   std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
-  std::shared_ptr<PointCloudCommon> point_cloud_common_;
+  std::shared_ptr<rviz_default_plugins::PointCloudCommon> point_cloud_common_;
+
+  const int field_size_32_ = 4;
+  const int field_size_64_ = 8;
+  int field_size_total_;
 };
 
-}  // namespace displays
+}      // namespace displays
 }  // namespace rviz_default_plugins
 
-#endif  // RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_
+#endif // RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_
