@@ -39,8 +39,6 @@
 #include "sensor_msgs/msg/temperature.hpp"
 #include "std_msgs/msg/header.hpp"
 
-// #include "../pointcloud_messages.hpp"
-
 using namespace std::chrono_literals; //NOLINT
 
 namespace nodes
