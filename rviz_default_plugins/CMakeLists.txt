@@ -345,6 +345,15 @@ if(BUILD_TESTING)
     target_link_libraries(grid_cells_display_test ${TEST_LINK_LIBRARIES})
   endif()
 
+  ament_add_gmock(illuminance_display_test
+          test/rviz_default_plugins/displays/illuminance/illuminance_display_test.cpp
+          test/rviz_default_plugins/displays/display_test_fixture.cpp
+          ${SKIP_DISPLAY_TESTS})
+  if(TARGET illuminance_display_test)
+    target_include_directories(illuminance_display_test PUBLIC ${TEST_INCLUDE_DIRS})
+    target_link_libraries(illuminance_display_test ${TEST_LINK_LIBRARIES})
+  endif()
+
   ament_add_gmock(image_display_test
     test/rviz_default_plugins/displays/image/image_display_test.cpp
     ${SKIP_DISPLAY_TESTS})
