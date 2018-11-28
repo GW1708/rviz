@@ -51,12 +51,12 @@ TEST_F(VisualTestFixture, sphere_changes_color_depending_on_illuminance) {
   illuminance_display->setStyle("Spheres");
   illuminance_display->setSizeMeters(11);
 
-  illuminance_publisher->setIlluminance(15);
+  illuminance_publisher->setIlluminance(0);
   captureMainWindow("illuminance_display_low_illuminance");
 
   executor_->queueAction([illuminance_publisher]()
     {
-      illuminance_publisher->setIlluminance(85);
+      illuminance_publisher->setIlluminance(1000);
     });
 
   captureMainWindow("illuminance_display_high_illuminance");
