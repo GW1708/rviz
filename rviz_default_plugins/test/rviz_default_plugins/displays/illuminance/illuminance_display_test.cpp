@@ -96,8 +96,8 @@ TEST_F(IlluminanceDisplayFixture, save_illuminance_value_correctly)
             illuminance_message->header, illuminance_message->illuminance, "illuminance");
 
   uint8_t offset_ptr = point_cloud_message->fields[3].offset;
-  float * scalar_value_ptr =
-    reinterpret_cast<float*> (point_cloud_message->data.data() + offset_ptr);
+  double * scalar_value_ptr =
+    reinterpret_cast<double *> (point_cloud_message->data.data() + offset_ptr);
 
   ASSERT_THAT(*scalar_value_ptr, Eq(100.));
 }

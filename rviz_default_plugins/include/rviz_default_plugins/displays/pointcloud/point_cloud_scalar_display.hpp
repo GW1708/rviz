@@ -37,8 +37,8 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-#include "rclcpp/clock.hpp"
-#include "rclcpp/time.hpp"
+//#include "rclcpp/clock.hpp"
+//#include "rclcpp/time.hpp"
 
 #include "rviz_common/display_context.hpp"
 #include "rviz_common/frame_manager_iface.hpp"
@@ -80,7 +80,7 @@ PointCloudScalarDisplay()
 ~PointCloudScalarDisplay() override = default;
 
 std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloud2Message(
-        const std_msgs::msg::Header & header, const float scalar_value, const std::string channelName)
+        const std_msgs::msg::Header & header, const double scalar_value, const std::string channelName)
 {
     auto point_cloud_message = std::make_shared<sensor_msgs::msg::PointCloud2>();
     const float coordinate_value = 0.0;
