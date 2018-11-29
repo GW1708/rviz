@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "rviz_default_plugins/displays/illuminance/illuminance_display.hpp"
+#include "rviz_default_plugins/displays/fluid_pressure/fluid_pressure_display.hpp"
 
 namespace rviz_default_plugins
 {
@@ -36,29 +36,31 @@ namespace rviz_default_plugins
 namespace displays
 {
 
-IlluminanceDisplay::IlluminanceDisplay()
+FluidPressureDisplay::FluidPressureDisplay()
 {}
 
-IlluminanceDisplay::~IlluminanceDisplay() = default;
+FluidPressureDisplay::~FluidPressureDisplay() = default;
 
-void IlluminanceDisplay::processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message)
+
+void FluidPressureDisplay::processMessage(
+  const sensor_msgs::msg::FluidPressure::ConstSharedPtr message)
 {
   auto point_cloud2_message_for_point_cloud_common =
-    createPointCloud2Message(message->header, message->illuminance, "illuminance");
+    createPointCloud2Message(message->header, message->fluid_pressure, "fluid_pressure");
 
   point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
 }
 
 
-void IlluminanceDisplay::setInitialValues()
+void FluidPressureDisplay::setInitialValues()
 {
   subProp("Channel Name")->setValue("illuminance");
   subProp("Autocompute Intensity Bounds")->setValue(false);
-  subProp("Min Intensity")->setValue(100);
-  subProp("Max Intensity")->setValue(10000);
+  subProp("Min Intensity")->setValue(98000);
+  subProp("Max Intensity")->setValue(105000);
 }
 
-void IlluminanceDisplay::hideUnneededProperties()
+void FluidPressureDisplay::hideUnneededProperties()
 {
   subProp("Position Transformer")->hide();
   subProp("Color Transformer")->hide();
@@ -70,4 +72,4 @@ void IlluminanceDisplay::hideUnneededProperties()
 }  // namespace rviz_default_plugins
 
 #include <pluginlib/class_list_macros.hpp> // NOLINT
-PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::IlluminanceDisplay, rviz_common::Display)
+PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::FluidPressureDisplay, rviz_common::Display)

@@ -77,12 +77,3 @@ public:
 
   std::shared_ptr<rviz_default_plugins::displays::TemperatureDisplay> display_;
 };
-//
-//TEST_F(TemperatureDisplayFixture, allocate_point_cloud_common_memory_correctly)
-//{
-//  auto temperature_message = createTemperatureMessage();
-//  auto point_cloud_message =
-//    display_->createPointCloudMessageFromTemperatureMessage(temperature_message);
-//
-//  ASSERT_THAT(point_cloud_message->point_step, Eq(20u));
-//}

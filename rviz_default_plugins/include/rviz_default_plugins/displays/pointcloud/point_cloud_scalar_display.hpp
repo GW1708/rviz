@@ -37,9 +37,6 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-//#include "rclcpp/clock.hpp"
-//#include "rclcpp/time.hpp"
-
 #include "rviz_common/display_context.hpp"
 #include "rviz_common/frame_manager_iface.hpp"
 #include "rviz_common/ros_topic_display.hpp"
@@ -67,21 +64,20 @@ namespace displays
 
 template<typename MessageType>
 class RVIZ_DEFAULT_PLUGINS_PUBLIC PointCloudScalarDisplay
-: public rviz_common::RosTopicDisplay<MessageType>
+  : public rviz_common::RosTopicDisplay<MessageType>
 {
-
 public:
-PointCloudScalarDisplay()
-: queue_size_property_(new rviz_common::QueueSizeProperty(this, 10)),
-  point_cloud_common_(new PointCloudCommon(this)),
-  field_size_total_(0)
-{}
+  PointCloudScalarDisplay()
+  : queue_size_property_(new rviz_common::QueueSizeProperty(this, 10)),
+    point_cloud_common_(new PointCloudCommon(this)),
+    field_size_total_(0)
+  {}
 
-~PointCloudScalarDisplay() override = default;
+  ~PointCloudScalarDisplay() override = default;
 
-std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloud2Message(
-        const std_msgs::msg::Header & header, const double scalar_value, const std::string channelName)
-{
+  std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloud2Message(
+    const std_msgs::msg::Header & header, const double scalar_value, const std::string channelName)
+  {
     auto point_cloud_message = std::make_shared<sensor_msgs::msg::PointCloud2>();
     const float coordinate_value = 0.0;
 
@@ -108,79 +104,78 @@ std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloud2Message(
     resetFieldSizeTotal();
 
     return point_cloud_message;
-}
+  }
 
 protected:
-    virtual void setInitialValues() = 0;
-    virtual void hideUnneededProperties() = 0;
+  virtual void setInitialValues() = 0;
+  virtual void hideUnneededProperties() = 0;
 
-    std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
-    std::shared_ptr<rviz_default_plugins::PointCloudCommon> point_cloud_common_;
+  std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
+  std::shared_ptr<rviz_default_plugins::PointCloudCommon> point_cloud_common_;
 
 private:
-    void onInitialize() override
-    {
+  void onInitialize() override
+  {
+    rviz_common::RosTopicDisplay<MessageType>::onInitialize();
+    point_cloud_common_->initialize(
+      this->context_, this->scene_node_);
+    setInitialValues();
+  }
 
-      rviz_common::RosTopicDisplay<MessageType>::onInitialize();
-      point_cloud_common_->initialize(
-        this->context_, this->scene_node_);
-      setInitialValues();
-    }
+  void update(float wall_dt, float ros_dt) override
+  {
+    point_cloud_common_->update(wall_dt, ros_dt);
+    hideUnneededProperties();
+  }
 
-    void update(float wall_dt, float ros_dt) override
-    {
-      point_cloud_common_->update(wall_dt, ros_dt);
-      hideUnneededProperties();
-    }
+  void onDisable() override
+  {
+    rviz_common::RosTopicDisplay<MessageType>::onDisable();
+    point_cloud_common_->onDisable();
+  }
 
-    void onDisable() override
-    {
-      rviz_common::RosTopicDisplay<MessageType>::onDisable();
-      point_cloud_common_->onDisable();
-    }
+  void reset() override
+  {
+    rviz_common::RosTopicDisplay<MessageType>::reset();
+    point_cloud_common_->reset();
+  }
 
-    void reset() override
-    {
-      rviz_common::RosTopicDisplay<MessageType>::reset();
-      point_cloud_common_->reset();
-    }
+  int addField32andReturnOffset(
+    std::shared_ptr<sensor_msgs::msg::PointCloud2> point_cloud_message, std::string field_name)
+  {
+    sensor_msgs::msg::PointField field;
+    field.name = field_name;
+    field.offset = field_size_total_;
+    field.datatype = sensor_msgs::msg::PointField::FLOAT32;
+    field.count = 1;
+    point_cloud_message->fields.push_back(field);
+    field_size_total_ += field_size_32_;
 
-    int addField32andReturnOffset(
-        std::shared_ptr<sensor_msgs::msg::PointCloud2> point_cloud_message, std::string field_name)
-    {
-        sensor_msgs::msg::PointField field;
-        field.name = field_name;
-        field.offset = field_size_total_;
-        field.datatype = sensor_msgs::msg::PointField::FLOAT32;
-        field.count = 1;
-        point_cloud_message->fields.push_back(field);
-        field_size_total_ += field_size_32_;
+    return field.offset;
+  }
 
-        return field.offset;
-    }
+  int addField64andReturnOffset(
+    std::shared_ptr<sensor_msgs::msg::PointCloud2> point_cloud_message, std::string field_name)
+  {
+    sensor_msgs::msg::PointField field;
+    field.name = field_name;
+    field.offset = field_size_total_;
+    field.datatype = sensor_msgs::msg::PointField::FLOAT64;
+    field.count = 1;
+    point_cloud_message->fields.push_back(field);
+    field_size_total_ += field_size_64_;
 
-    int addField64andReturnOffset(
-        std::shared_ptr<sensor_msgs::msg::PointCloud2> point_cloud_message, std::string field_name)
-    {
-        sensor_msgs::msg::PointField field;
-        field.name = field_name;
-        field.offset = field_size_total_;
-        field.datatype = sensor_msgs::msg::PointField::FLOAT64;
-        field.count = 1;
-        point_cloud_message->fields.push_back(field);
-        field_size_total_ += field_size_64_;
+    return field.offset;
+  }
 
-        return field.offset;
-    }
+  void resetFieldSizeTotal()
+  {
+    field_size_total_ = 0;
+  }
 
-    void resetFieldSizeTotal()
-    {
-        field_size_total_ = 0;
-    }
-
-    const unsigned int field_size_32_ = 4;
-    const unsigned int field_size_64_ = 8;
-    int field_size_total_;
+  const unsigned int field_size_32_ = 4;
+  const unsigned int field_size_64_ = 8;
+  int field_size_total_;
 };
 
 }  // namespace displays

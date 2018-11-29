@@ -31,8 +31,8 @@
 #ifndef RVIZ_DEFAULT_PLUGINS__DISPLAYS__TEMPERATURE__TEMPERATURE_DISPLAY_HPP_
 #define RVIZ_DEFAULT_PLUGINS__DISPLAYS__TEMPERATURE__TEMPERATURE_DISPLAY_HPP_
 
-#include "sensor_msgs/msg/temperature.hpp"
 #include "rviz_default_plugins/displays/pointcloud/point_cloud_scalar_display.hpp"
+#include "sensor_msgs/msg/temperature.hpp"
 
 namespace rviz_default_plugins
 {

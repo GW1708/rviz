@@ -49,7 +49,7 @@ namespace displays
  */
 
 class RVIZ_DEFAULT_PLUGINS_PUBLIC IlluminanceDisplay
-: public PointCloudScalarDisplay<sensor_msgs::msg::Illuminance>
+  : public PointCloudScalarDisplay<sensor_msgs::msg::Illuminance>
 {
   Q_OBJECT
 
@@ -62,7 +62,6 @@ private:
 
   void setInitialValues() override;
   void hideUnneededProperties() override;
-
 };
 
 }  // namespace displays

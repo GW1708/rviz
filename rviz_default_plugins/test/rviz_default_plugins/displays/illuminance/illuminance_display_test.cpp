@@ -82,8 +82,8 @@ TEST_F(IlluminanceDisplayFixture, allocate_point_cloud_common_memory_correctly)
 {
   auto illuminance_message = createIlluminanceMessage();
   auto point_cloud_message =
-  display_->createPointCloud2Message(
-          illuminance_message->header, illuminance_message->illuminance, "illuminance");
+    display_->createPointCloud2Message(
+    illuminance_message->header, illuminance_message->illuminance, "illuminance");
 
   ASSERT_THAT(point_cloud_message->point_step, Eq(20u));
 }
@@ -93,11 +93,11 @@ TEST_F(IlluminanceDisplayFixture, save_illuminance_value_correctly)
   auto illuminance_message = createIlluminanceMessage();
   auto point_cloud_message =
     display_->createPointCloud2Message(
-            illuminance_message->header, illuminance_message->illuminance, "illuminance");
+    illuminance_message->header, illuminance_message->illuminance, "illuminance");
 
   uint8_t offset_ptr = point_cloud_message->fields[3].offset;
   double * scalar_value_ptr =
-    reinterpret_cast<double *> (point_cloud_message->data.data() + offset_ptr);
+    reinterpret_cast<double *>(point_cloud_message->data.data() + offset_ptr);
 
   ASSERT_THAT(*scalar_value_ptr, Eq(100.));
 }

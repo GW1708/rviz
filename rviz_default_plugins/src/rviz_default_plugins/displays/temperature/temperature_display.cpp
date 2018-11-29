@@ -30,11 +30,6 @@
 
 #include "rviz_default_plugins/displays/temperature/temperature_display.hpp"
 
-#include "rclcpp/clock.hpp"
-#include "rclcpp/time.hpp"
-
-#include "rviz_default_plugins/displays/pointcloud/point_cloud_scalar_display.hpp"
-
 namespace rviz_default_plugins
 {
 
@@ -58,7 +53,7 @@ void TemperatureDisplay::setInitialValues()
 void TemperatureDisplay::processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message)
 {
   auto point_cloud2_message_for_point_cloud_common =
-          createPointCloud2Message(message->header, message->temperature, "temperature");
+    createPointCloud2Message(message->header, message->temperature, "temperature");
 
   point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
 }

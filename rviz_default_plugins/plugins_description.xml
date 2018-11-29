@@ -36,12 +36,25 @@
   </class>
 
   <class
+          name="rviz_default_plugins/FluidPressure"
+          type="rviz_default_plugins::displays::FluidPressureDisplay"
+          base_class_type="rviz_common::Display"
+  >
+    <description>
+      Displays data from a sensor_msgs::FluidPressure as pointcloud with one point that changes
+      color according to fluid pressure
+    </description>
+    <message_type>sensor_msgs/FluidPressure</message_type>
+  </class>
+
+  <class
           name="rviz_default_plugins/Illuminance"
           type="rviz_default_plugins::displays::IlluminanceDisplay"
           base_class_type="rviz_common::Display"
   >
     <description>
-      Displays data from a nav_msgs::Illuminance as pointcloud with one point
+      Displays data from a sensor_msgs::Illuminance as pointcloud with one point that changes
+      color according to illuminance
     </description>
     <message_type>sensor_msgs/Illuminance</message_type>
   </class>
@@ -133,6 +146,18 @@
   </class>
 
   <class
+          name="rviz_default_plugins/RelativeHumidity"
+          type="rviz_default_plugins::displays::RelativeHumidityDisplay"
+          base_class_type="rviz_common::Display"
+  >
+    <description>
+      Displays data from a sensor_msgs::RelativeHumidity as pointcloud with one point that changes
+      color according to relative humidity
+    </description>
+    <message_type>sensor_msgs/RelativeHumidity</message_type>
+  </class>
+
+  <class
     name="rviz_default_plugins/RobotModel"
     type="rviz_default_plugins::displays::RobotModelDisplay"
     base_class_type="rviz_common::Display"
@@ -148,7 +173,8 @@
     base_class_type="rviz_common::Display"
   >
     <description>
-      Displays a temperature field
+      Displays data from a sensor_msgs::Temperature as pointcloud with one point that changes
+      color according to temperature
     </description>
     <message_type>sensor_msgs/Temperature</message_type>
   </class>

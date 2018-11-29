@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "rviz_default_plugins/displays/illuminance/illuminance_display.hpp"
+#include "rviz_default_plugins/displays/relative_humidity/relative_humidity_display.hpp"
 
 namespace rviz_default_plugins
 {
@@ -36,29 +36,31 @@ namespace rviz_default_plugins
 namespace displays
 {
 
-IlluminanceDisplay::IlluminanceDisplay()
+RelativeHumidityDisplay::RelativeHumidityDisplay()
 {}
 
-IlluminanceDisplay::~IlluminanceDisplay() = default;
+RelativeHumidityDisplay::~RelativeHumidityDisplay() = default;
 
-void IlluminanceDisplay::processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message)
+
+void RelativeHumidityDisplay::processMessage(
+  const sensor_msgs::msg::RelativeHumidity::ConstSharedPtr message)
 {
   auto point_cloud2_message_for_point_cloud_common =
-    createPointCloud2Message(message->header, message->illuminance, "illuminance");
+    createPointCloud2Message(message->header, message->relative_humidity, "relative_humidity");
 
   point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
 }
 
 
-void IlluminanceDisplay::setInitialValues()
+void RelativeHumidityDisplay::setInitialValues()
 {
   subProp("Channel Name")->setValue("illuminance");
   subProp("Autocompute Intensity Bounds")->setValue(false);
-  subProp("Min Intensity")->setValue(100);
-  subProp("Max Intensity")->setValue(10000);
+  subProp("Min Intensity")->setValue(0.0);
+  subProp("Max Intensity")->setValue(1.0);
 }
 
-void IlluminanceDisplay::hideUnneededProperties()
+void RelativeHumidityDisplay::hideUnneededProperties()
 {
   subProp("Position Transformer")->hide();
   subProp("Color Transformer")->hide();
@@ -70,4 +72,5 @@ void IlluminanceDisplay::hideUnneededProperties()
 }  // namespace rviz_default_plugins
 
 #include <pluginlib/class_list_macros.hpp> // NOLINT
-PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::IlluminanceDisplay, rviz_common::Display)
+PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::RelativeHumidityDisplay,
+  rviz_common::Display)
