@@ -34,19 +34,23 @@
 #include <memory>
 #include <string>
 
-#include "sensor_msgs/msg/point_cloud2.hpp"
-#include "std_msgs/msg/header.hpp"
-
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-#include "rviz_common/frame_manager_iface.hpp"
+#include "rclcpp/clock.hpp"
+#include "rclcpp/time.hpp"
+
 #include "rviz_common/display_context.hpp"
+#include "rviz_common/frame_manager_iface.hpp"
 #include "rviz_common/ros_topic_display.hpp"
 #include "rviz_common/properties/queue_size_property.hpp"
-#include "rviz_default_plugins/visibility_control.hpp"
+#include "rviz_common/validate_floats.hpp"
 #include "rviz_default_plugins/displays/pointcloud/point_cloud_common.hpp"
+#include "rviz_default_plugins/visibility_control.hpp"
+#include "rviz_rendering/objects/point_cloud.hpp"
 
+#include "sensor_msgs/msg/point_cloud2.hpp"
+#include "std_msgs/msg/header.hpp"
 
 namespace rviz_default_plugins
 {
@@ -67,8 +71,6 @@ class RVIZ_DEFAULT_PLUGINS_PUBLIC PointCloudScalarDisplay
 {
 
 public:
-typedef PointCloudScalarDisplay<MessageType> PCSClass;
-
 PointCloudScalarDisplay()
 : queue_size_property_(new rviz_common::QueueSizeProperty(this, 10)),
   point_cloud_common_(new PointCloudCommon(this)),
@@ -76,15 +78,6 @@ PointCloudScalarDisplay()
 {}
 
 ~PointCloudScalarDisplay() override = default;
-
-void updatePointCloudCommon(
-    const std_msgs::msg::Header & header, const float scalar_value, const std::string channelName)
-{
-    auto point_cloud2_message_for_point_cloud_common =
-            createPointCloud2Message(header, scalar_value, channelName);
-
-    point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
-}
 
 std::shared_ptr<sensor_msgs::msg::PointCloud2> createPointCloud2Message(
         const std_msgs::msg::Header & header, const float scalar_value, const std::string channelName)
@@ -121,31 +114,35 @@ protected:
     virtual void setInitialValues() = 0;
     virtual void hideUnneededProperties() = 0;
 
+    std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
+    std::shared_ptr<rviz_default_plugins::PointCloudCommon> point_cloud_common_;
+
 private:
     void onInitialize() override
     {
-        rviz_common::RosTopicDisplay<MessageType>::onInitialize();
-        point_cloud_common_->initialize(
-          rviz_common::Display::context_, rviz_common::Display::scene_node_);
-        setInitialValues();
+
+      rviz_common::RosTopicDisplay<MessageType>::onInitialize();
+      point_cloud_common_->initialize(
+        this->context_, this->scene_node_);
+      setInitialValues();
     }
 
     void update(float wall_dt, float ros_dt) override
     {
-        point_cloud_common_->update(wall_dt, ros_dt);
-        hideUnneededProperties();
+      point_cloud_common_->update(wall_dt, ros_dt);
+      hideUnneededProperties();
     }
 
     void onDisable() override
     {
-        rviz_common::RosTopicDisplay<MessageType>::onDisable();
-        point_cloud_common_->onDisable();
+      rviz_common::RosTopicDisplay<MessageType>::onDisable();
+      point_cloud_common_->onDisable();
     }
 
     void reset() override
     {
-        rviz_common::RosTopicDisplay<MessageType>::reset();
-        point_cloud_common_->reset();
+      rviz_common::RosTopicDisplay<MessageType>::reset();
+      point_cloud_common_->reset();
     }
 
     int addField32andReturnOffset(
@@ -181,15 +178,12 @@ private:
         field_size_total_ = 0;
     }
 
-    std::unique_ptr<rviz_common::QueueSizeProperty> queue_size_property_;
-    std::shared_ptr<rviz_default_plugins::PointCloudCommon> point_cloud_common_;
-
     const unsigned int field_size_32_ = 4;
     const unsigned int field_size_64_ = 8;
     int field_size_total_;
 };
 
-}      // namespace displays
+}  // namespace displays
 }  // namespace rviz_default_plugins
 
 #endif  // RVIZ_DEFAULT_PLUGINS__DISPLAYS__POINTCLOUD__POINT_CLOUD_SCALAR_DISPLAY_HPP_

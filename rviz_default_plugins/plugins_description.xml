@@ -43,7 +43,7 @@
     <description>
       Displays data from a nav_msgs::Illuminance as pointcloud with one point
     </description>
-    <message_type>nav_msgs/Illuminance</message_type>
+    <message_type>sensor_msgs/Illuminance</message_type>
   </class>
 
   <class

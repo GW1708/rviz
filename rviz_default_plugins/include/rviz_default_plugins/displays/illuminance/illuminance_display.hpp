@@ -31,18 +31,8 @@
 #ifndef RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_
 #define RVIZ_DEFAULT_PLUGINS__DISPLAYS__ILLUMINANCE__ILLUMINANCE_DISPLAY_HPP_
 
-// #include <memory>
-// #include <string>
-
-#include "sensor_msgs/msg/illuminance.hpp"
-// #include "sensor_msgs/msg/point_cloud2.hpp"
-
-//#include "rviz_common/ros_topic_display.hpp"
-//#include "rviz_common/properties/queue_size_property.hpp"
-//#include "rviz_default_plugins/visibility_control.hpp"
-
 #include "rviz_default_plugins/displays/pointcloud/point_cloud_scalar_display.hpp"
-
+#include "sensor_msgs/msg/illuminance.hpp"
 
 namespace rviz_default_plugins
 {

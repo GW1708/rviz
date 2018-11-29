@@ -29,25 +29,7 @@
  */
 
 #include "rviz_default_plugins/displays/illuminance/illuminance_display.hpp"
-
-//#include <memory>
-//#include <string>
-//#include <iostream>
-
-// #include <OgreSceneNode.h>
-// #include <OgreSceneManager.h>
-
-#include "rclcpp/clock.hpp"
-#include "rclcpp/time.hpp"
-
-
 #include "rviz_default_plugins/displays/pointcloud/point_cloud_scalar_display.hpp"
-
-//#include "rviz_rendering/objects/point_cloud.hpp"
-//#include "rviz_common/validate_floats.hpp"
-//#include "rviz_common/display_context.hpp"
-//#include "rviz_common/frame_manager_iface.hpp"
-//#include "rviz_common/properties/queue_size_property.hpp"
 
 namespace rviz_default_plugins
 {
@@ -62,7 +44,10 @@ IlluminanceDisplay::~IlluminanceDisplay() = default;
 
 void IlluminanceDisplay::processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message)
 {
-  PCSClass::updatePointCloudCommon(message->header, message->illuminance, "illuminance");
+  auto point_cloud2_message_for_point_cloud_common =
+          createPointCloud2Message(message->header, message->illuminance, "illuminance");
+
+  point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
 }
 
 
@@ -70,8 +55,8 @@ void IlluminanceDisplay::setInitialValues()
 {
   subProp("Channel Name")->setValue("illuminance");
   subProp("Autocompute Intensity Bounds")->setValue(false);
-  subProp("Min Intensity")->setValue(0);
-  subProp("Max Intensity")->setValue(1000);
+  subProp("Min Intensity")->setValue(100);
+  subProp("Max Intensity")->setValue(10000);
 }
 
 void IlluminanceDisplay::hideUnneededProperties()
