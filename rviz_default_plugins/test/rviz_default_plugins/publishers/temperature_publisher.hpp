@@ -48,7 +48,7 @@ class TemperaturePublisher : public rclcpp::Node
 {
 public:
   TemperaturePublisher();
-  void setTemperature(float temperature);
+  void setTemperature(double temperature);
 
 private:
   sensor_msgs::msg::Temperature createTemperatureMessage();
@@ -56,7 +56,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<sensor_msgs::msg::Temperature>::SharedPtr publisher_;
 
-  float temperature_;
+  double temperature_;
 };
 
 TemperaturePublisher::TemperaturePublisher()
@@ -86,7 +86,7 @@ sensor_msgs::msg::Temperature TemperaturePublisher::createTemperatureMessage()
   return temperatureMessage;
 }
 
-void TemperaturePublisher::setTemperature(float temperature)
+void TemperaturePublisher::setTemperature(double temperature)
 {
   temperature_ = temperature;
 }
