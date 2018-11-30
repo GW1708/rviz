@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Willow Garage, Inc.
+ * Copyright (c) 2018, Bosch Software Innovations GmbH.
  * Copyright (c) 2018, TNG Technology Consulting GmbH.
  * All rights reserved.
  *
@@ -11,8 +11,8 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Willow Garage, Inc. nor the names of its
- *       contributors may be used to endorse or promote products derived from
+ *     * Neither the name of the copyright holder nor the names of its contributors
+ *       may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -28,48 +28,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "rviz_default_plugins/displays/fluid_pressure/fluid_pressure_display.hpp"
+#include "fluid_pressure_display_page_object.hpp"
 
-namespace rviz_default_plugins
-{
+#include <memory>
+#include <vector>
 
-namespace displays
-{
+#include <QTest>  // NOLINT
 
-FluidPressureDisplay::FluidPressureDisplay()
+FluidPressureDisplayPageObject::FluidPressureDisplayPageObject()
+: PointCloudCommonPageObject("FluidPressure")
 {}
 
-FluidPressureDisplay::~FluidPressureDisplay() = default;
-
-
-void FluidPressureDisplay::processMessage(
-  const sensor_msgs::msg::FluidPressure::ConstSharedPtr message)
+void FluidPressureDisplayPageObject::setQueueSize(int queue_size)
 {
-  auto point_cloud2_message_for_point_cloud_common =
-    createPointCloud2Message(message->header, message->fluid_pressure, "fluid_pressure");
-
-  point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
+  setInt("Queue Size", queue_size);
 }
-
-
-void FluidPressureDisplay::setInitialValues()
-{
-  subProp("Channel Name")->setValue("fluid_pressure");
-  subProp("Autocompute Intensity Bounds")->setValue(false);
-  subProp("Min Intensity")->setValue(98000);
-  subProp("Max Intensity")->setValue(105000);
-}
-
-void FluidPressureDisplay::hideUnneededProperties()
-{
-  subProp("Position Transformer")->hide();
-  subProp("Color Transformer")->hide();
-  subProp("Channel Name")->hide();
-  subProp("Autocompute Intensity Bounds")->hide();
-}
-
-}  // namespace displays
-}  // namespace rviz_default_plugins
-
-#include <pluginlib/class_list_macros.hpp> // NOLINT
-PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::FluidPressureDisplay, rviz_common::Display)

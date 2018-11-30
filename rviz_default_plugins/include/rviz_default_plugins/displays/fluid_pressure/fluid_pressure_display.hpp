@@ -42,7 +42,6 @@ class PointCloudCommon;
 namespace displays
 {
 
-
 /**
  * \class FluidPressureDisplay
  * \brief Displays an FluidPressure message of type sensor_msgs::FluidPressure
