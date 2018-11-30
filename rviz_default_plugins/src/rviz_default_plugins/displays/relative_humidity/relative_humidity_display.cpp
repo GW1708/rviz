@@ -54,10 +54,10 @@ void RelativeHumidityDisplay::processMessage(
 
 void RelativeHumidityDisplay::setInitialValues()
 {
-  subProp("Channel Name")->setValue("illuminance");
+  subProp("Channel Name")->setValue("relative_humidity");
   subProp("Autocompute Intensity Bounds")->setValue(false);
-  subProp("Min Intensity")->setValue(0.0);
-  subProp("Max Intensity")->setValue(1.0);
+  subProp("Min Intensity")->setValue(0.);
+  subProp("Max Intensity")->setValue(1.);
 }
 
 void RelativeHumidityDisplay::hideUnneededProperties()

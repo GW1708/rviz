@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Willow Garage, Inc.
+ * Copyright (c) 2018, Bosch Software Innovations GmbH.
  * Copyright (c) 2018, TNG Technology Consulting GmbH.
  * All rights reserved.
  *
@@ -11,8 +11,8 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Willow Garage, Inc. nor the names of its
- *       contributors may be used to endorse or promote products derived from
+ *     * Neither the name of the copyright holder nor the names of its contributors
+ *       may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -28,43 +28,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef RVIZ_DEFAULT_PLUGINS__DISPLAYS__RELATIVE_HUMIDITY__RELATIVE_HUMIDITY_DISPLAY_HPP_
-#define RVIZ_DEFAULT_PLUGINS__DISPLAYS__RELATIVE_HUMIDITY__RELATIVE_HUMIDITY_DISPLAY_HPP_
+#include "relative_humidity_display_page_object.hpp"
 
-#include "rviz_default_plugins/displays/pointcloud/point_cloud_scalar_display.hpp"
-#include "sensor_msgs/msg/relative_humidity.hpp"
+#include <memory>
+#include <vector>
 
-namespace rviz_default_plugins
+#include <QTest>  // NOLINT
+
+RelativeHumidityDisplayPageObject::RelativeHumidityDisplayPageObject()
+: PointCloudCommonPageObject("RelativeHumidity")
+{}
+
+void RelativeHumidityDisplayPageObject::setQueueSize(int queue_size)
 {
-
-class PointCloudCommon;
-
-namespace displays
-{
-
-/**
- * \class RelativeHumidityDisplay
- * \brief Displays an RelativeHumidity message of type sensor_msgs::RelativeHumidity
- *
- */
-
-class RVIZ_DEFAULT_PLUGINS_PUBLIC RelativeHumidityDisplay
-  : public PointCloudScalarDisplay<sensor_msgs::msg::RelativeHumidity>
-{
-  Q_OBJECT
-
-public:
-  RelativeHumidityDisplay();
-  ~RelativeHumidityDisplay() override;
-
-private:
-  void processMessage(const sensor_msgs::msg::RelativeHumidity::ConstSharedPtr message) override;
-
-  void setInitialValues() override;
-  void hideUnneededProperties() override;
-};
-
-}  // namespace displays
-}  // namespace rviz_default_plugins
-
-#endif  // RVIZ_DEFAULT_PLUGINS__DISPLAYS__RELATIVE_HUMIDITY__RELATIVE_HUMIDITY_DISPLAY_HPP_
+  setInt("Queue Size", queue_size);
+}
