@@ -51,19 +51,19 @@ TEST_F(VisualTestFixture, sphere_changes_color_depending_on_illuminance) {
   illuminance_display->setStyle("Spheres");
   illuminance_display->setSizeMeters(11);
 
-  illuminance_publisher->setIlluminance(0);
+  illuminance_publisher->setIlluminance(150);
   captureMainWindow("illuminance_display_low_illuminance");
 
   executor_->queueAction([illuminance_publisher]()
     {
-      illuminance_publisher->setIlluminance(1000);
+      illuminance_publisher->setIlluminance(800);
     });
 
   captureMainWindow("illuminance_display_high_illuminance");
   assertScreenShotsIdentity();
 
-  /* Minimum and Maximum Illuminance have small color contrast
+  /* Minimum and Maximum have small color contrast
    * because it is purple and red respectively
-   * therefore use low and high illuminance for nice orange blue contrast
+   * therefore use low and high values for nice orange blue contrast
    */
 }

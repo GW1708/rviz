@@ -48,7 +48,7 @@ class IlluminancePublisher : public rclcpp::Node
 {
 public:
   IlluminancePublisher();
-  void setIlluminance(float illuminance);
+  void setIlluminance(double illuminance);
 
 private:
   sensor_msgs::msg::Illuminance createIlluminanceMessage();
@@ -56,7 +56,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<sensor_msgs::msg::Illuminance>::SharedPtr publisher_;
 
-  float illuminance_;
+  double illuminance_;
 };
 
 IlluminancePublisher::IlluminancePublisher()
@@ -86,7 +86,7 @@ sensor_msgs::msg::Illuminance IlluminancePublisher::createIlluminanceMessage()
   return illuminanceMessage;
 }
 
-void IlluminancePublisher::setIlluminance(float illuminance)
+void IlluminancePublisher::setIlluminance(double illuminance)
 {
   illuminance_ = illuminance;
 }

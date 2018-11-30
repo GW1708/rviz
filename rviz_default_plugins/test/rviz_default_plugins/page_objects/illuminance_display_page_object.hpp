@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, Bosch Software Innovations GmbH.
- * Copyright (c) 2018, Maximilian Kuehn
+ * Copyright (c) 2018, TNG Technology Consulting GmbH.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,7 @@
 
 #ifndef RVIZ_DEFAULT_PLUGINS__PAGE_OBJECTS__ILLUMINANCE_DISPLAY_PAGE_OBJECT_HPP_
 #define RVIZ_DEFAULT_PLUGINS__PAGE_OBJECTS__ILLUMINANCE_DISPLAY_PAGE_OBJECT_HPP_
+
 
 #include "rviz_visual_testing_framework/page_objects/base_page_object.hpp"
 

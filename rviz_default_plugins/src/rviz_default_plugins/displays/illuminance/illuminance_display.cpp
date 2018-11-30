@@ -54,8 +54,8 @@ void IlluminanceDisplay::setInitialValues()
 {
   subProp("Channel Name")->setValue("illuminance");
   subProp("Autocompute Intensity Bounds")->setValue(false);
-  subProp("Min Intensity")->setValue(100);
-  subProp("Max Intensity")->setValue(10000);
+  subProp("Min Intensity")->setValue(0);
+  subProp("Max Intensity")->setValue(1000);
 }
 
 void IlluminanceDisplay::hideUnneededProperties()
