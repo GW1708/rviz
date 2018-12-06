@@ -41,17 +41,6 @@ FluidPressureDisplay::FluidPressureDisplay()
 
 FluidPressureDisplay::~FluidPressureDisplay() = default;
 
-
-void FluidPressureDisplay::processMessage(
-  const sensor_msgs::msg::FluidPressure::ConstSharedPtr message)
-{
-  auto point_cloud2_message_for_point_cloud_common =
-    createPointCloud2Message(message->header, message->fluid_pressure, "fluid_pressure");
-
-  point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
-}
-
-
 void FluidPressureDisplay::setInitialValues()
 {
   subProp("Channel Name")->setValue("fluid_pressure");
@@ -68,8 +57,17 @@ void FluidPressureDisplay::hideUnneededProperties()
   subProp("Autocompute Intensity Bounds")->hide();
 }
 
+void FluidPressureDisplay::processMessage(
+  const sensor_msgs::msg::FluidPressure::ConstSharedPtr message)
+{
+  auto point_cloud2_message =
+    createPointCloud2Message(message->header, message->fluid_pressure, "fluid_pressure");
+
+  point_cloud_common_->addMessage(point_cloud2_message);
+}
+
 }  // namespace displays
 }  // namespace rviz_default_plugins
 
-#include <pluginlib/class_list_macros.hpp> // NOLINT
+#include <pluginlib/class_list_macros.hpp>  // NOLINT
 PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::FluidPressureDisplay, rviz_common::Display)

@@ -34,8 +34,16 @@
 #include "rviz_visual_testing_framework/visual_test_fixture.hpp"
 #include "rviz_visual_testing_framework/visual_test_publisher.hpp"
 
-#include "../../page_objects/illuminance_display_page_object.hpp"
+#include "../../page_objects/point_cloud_common_page_object.hpp"
 #include "../../publishers/illuminance_publisher.hpp"
+
+class IlluminanceDisplayPageObject : public PointCloudCommonPageObject
+{
+public:
+  IlluminanceDisplayPageObject()
+  : PointCloudCommonPageObject("Illuminance")
+  {}
+};
 
 TEST_F(VisualTestFixture, sphere_changes_color_depending_on_illuminance) {
   auto illuminance_publisher = std::make_shared<nodes::IlluminancePublisher>();
@@ -61,9 +69,4 @@ TEST_F(VisualTestFixture, sphere_changes_color_depending_on_illuminance) {
 
   captureMainWindow("illuminance_display_high_illuminance");
   assertScreenShotsIdentity();
-
-  /* Minimum and Maximum have small color contrast
-   * because it is purple and red respectively
-   * therefore use low and high values for nice orange blue contrast
-   */
 }

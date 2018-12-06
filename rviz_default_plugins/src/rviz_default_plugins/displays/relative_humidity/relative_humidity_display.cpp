@@ -41,17 +41,6 @@ RelativeHumidityDisplay::RelativeHumidityDisplay()
 
 RelativeHumidityDisplay::~RelativeHumidityDisplay() = default;
 
-
-void RelativeHumidityDisplay::processMessage(
-  const sensor_msgs::msg::RelativeHumidity::ConstSharedPtr message)
-{
-  auto point_cloud2_message_for_point_cloud_common =
-    createPointCloud2Message(message->header, message->relative_humidity, "relative_humidity");
-
-  point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
-}
-
-
 void RelativeHumidityDisplay::setInitialValues()
 {
   subProp("Channel Name")->setValue("relative_humidity");
@@ -68,9 +57,18 @@ void RelativeHumidityDisplay::hideUnneededProperties()
   subProp("Autocompute Intensity Bounds")->hide();
 }
 
+void RelativeHumidityDisplay::processMessage(
+  const sensor_msgs::msg::RelativeHumidity::ConstSharedPtr message)
+{
+  auto point_cloud2_message =
+    createPointCloud2Message(message->header, message->relative_humidity, "relative_humidity");
+
+  point_cloud_common_->addMessage(point_cloud2_message);
+}
+
 }  // namespace displays
 }  // namespace rviz_default_plugins
 
-#include <pluginlib/class_list_macros.hpp> // NOLINT
+#include <pluginlib/class_list_macros.hpp>  // NOLINT
 PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::RelativeHumidityDisplay,
   rviz_common::Display)

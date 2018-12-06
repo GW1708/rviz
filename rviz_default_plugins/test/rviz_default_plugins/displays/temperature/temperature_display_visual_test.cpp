@@ -34,8 +34,16 @@
 #include "rviz_visual_testing_framework/visual_test_fixture.hpp"
 #include "rviz_visual_testing_framework/visual_test_publisher.hpp"
 
-#include "../../page_objects/temperature_display_page_object.hpp"
+#include "../../page_objects/point_cloud_common_page_object.hpp"
 #include "../../publishers/temperature_publisher.hpp"
+
+class TemperatureDisplayPageObject : public PointCloudCommonPageObject
+{
+public:
+  TemperatureDisplayPageObject()
+  : PointCloudCommonPageObject("Temperature")
+  {}
+};
 
 TEST_F(VisualTestFixture, sphere_changes_color_depending_on_temperature) {
   auto temperature_publisher = std::make_shared<nodes::TemperaturePublisher>();
@@ -61,9 +69,4 @@ TEST_F(VisualTestFixture, sphere_changes_color_depending_on_temperature) {
 
   captureMainWindow("temperature_display_high_temperature");
   assertScreenShotsIdentity();
-
-  /* Minimum and Maximum have small color contrast
-   * because it is purple and red respectively
-   * therefore use low and high values for nice orange blue contrast
-   */
 }

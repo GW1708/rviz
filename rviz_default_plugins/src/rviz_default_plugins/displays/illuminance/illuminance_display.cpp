@@ -41,15 +41,6 @@ IlluminanceDisplay::IlluminanceDisplay()
 
 IlluminanceDisplay::~IlluminanceDisplay() = default;
 
-void IlluminanceDisplay::processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message)
-{
-  auto point_cloud2_message_for_point_cloud_common =
-    createPointCloud2Message(message->header, message->illuminance, "illuminance");
-
-  point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
-}
-
-
 void IlluminanceDisplay::setInitialValues()
 {
   subProp("Channel Name")->setValue("illuminance");
@@ -66,8 +57,16 @@ void IlluminanceDisplay::hideUnneededProperties()
   subProp("Autocompute Intensity Bounds")->hide();
 }
 
+void IlluminanceDisplay::processMessage(const sensor_msgs::msg::Illuminance::ConstSharedPtr message)
+{
+  auto point_cloud2_message =
+    createPointCloud2Message(message->header, message->illuminance, "illuminance");
+
+  point_cloud_common_->addMessage(point_cloud2_message);
+}
+
 }  // namespace displays
 }  // namespace rviz_default_plugins
 
-#include <pluginlib/class_list_macros.hpp> // NOLINT
+#include <pluginlib/class_list_macros.hpp>  // NOLINT
 PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::IlluminanceDisplay, rviz_common::Display)

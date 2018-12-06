@@ -34,8 +34,16 @@
 #include "rviz_visual_testing_framework/visual_test_fixture.hpp"
 #include "rviz_visual_testing_framework/visual_test_publisher.hpp"
 
-#include "../../page_objects/fluid_pressure_display_page_object.hpp"
+#include "../../page_objects/point_cloud_common_page_object.hpp"
 #include "../../publishers/fluid_pressure_publisher.hpp"
+
+class FluidPressureDisplayPageObject : public PointCloudCommonPageObject
+{
+public:
+  FluidPressureDisplayPageObject()
+  : PointCloudCommonPageObject("FluidPressure")
+  {}
+};
 
 TEST_F(VisualTestFixture, sphere_changes_color_depending_on_fluid_pressure) {
   auto fluid_pressure_publisher = std::make_shared<nodes::FluidPressurePublisher>();
@@ -61,9 +69,4 @@ TEST_F(VisualTestFixture, sphere_changes_color_depending_on_fluid_pressure) {
 
   captureMainWindow("fluid_pressure_display_high_fluid_pressure");
   assertScreenShotsIdentity();
-
-/* Minimum and Maximum have small color contrast
- * because it is purple and red respectively
- * therefore use low and high values for nice orange blue contrast
- */
 }

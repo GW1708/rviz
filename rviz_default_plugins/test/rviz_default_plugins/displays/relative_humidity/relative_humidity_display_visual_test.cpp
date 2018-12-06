@@ -34,8 +34,16 @@
 #include "rviz_visual_testing_framework/visual_test_fixture.hpp"
 #include "rviz_visual_testing_framework/visual_test_publisher.hpp"
 
-#include "../../page_objects/relative_humidity_display_page_object.hpp"
+#include "../../page_objects/point_cloud_common_page_object.hpp"
 #include "../../publishers/relative_humidity_publisher.hpp"
+
+class RelativeHumidityDisplayPageObject : public PointCloudCommonPageObject
+{
+public:
+  RelativeHumidityDisplayPageObject()
+  : PointCloudCommonPageObject("RelativeHumidity")
+  {}
+};
 
 TEST_F(VisualTestFixture, sphere_changes_color_depending_on_relative_humidity) {
   auto relative_humidity_publisher = std::make_shared<nodes::RelativeHumidityPublisher>();
@@ -61,9 +69,4 @@ TEST_F(VisualTestFixture, sphere_changes_color_depending_on_relative_humidity) {
 
   captureMainWindow("relative_humidity_display_high_relative_humidity");
   assertScreenShotsIdentity();
-
-/* Minimum and Maximum have small color contrast
- * because it is purple and red respectively
- * therefore use low and high values for nice orange blue contrast
- */
 }

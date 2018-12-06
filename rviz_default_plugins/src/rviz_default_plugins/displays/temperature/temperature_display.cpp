@@ -46,16 +46,8 @@ void TemperatureDisplay::setInitialValues()
   subProp("Channel Name")->setValue("temperature");
   subProp("Autocompute Intensity Bounds")->setValue(false);
   subProp("Invert Rainbow")->setValue(true);
-  subProp("Min Intensity")->setValue(0);    // Water Freezing
-  subProp("Max Intensity")->setValue(100);  // Water Boiling
-}
-
-void TemperatureDisplay::processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message)
-{
-  auto point_cloud2_message_for_point_cloud_common =
-    createPointCloud2Message(message->header, message->temperature, "temperature");
-
-  point_cloud_common_->addMessage(point_cloud2_message_for_point_cloud_common);
+  subProp("Min Intensity")->setValue(0);
+  subProp("Max Intensity")->setValue(100);
 }
 
 void TemperatureDisplay::hideUnneededProperties()
@@ -67,8 +59,16 @@ void TemperatureDisplay::hideUnneededProperties()
   subProp("Autocompute Intensity Bounds")->hide();
 }
 
+void TemperatureDisplay::processMessage(const sensor_msgs::msg::Temperature::ConstSharedPtr message)
+{
+  auto point_cloud2_message =
+    createPointCloud2Message(message->header, message->temperature, "temperature");
+
+  point_cloud_common_->addMessage(point_cloud2_message);
+}
+
 }  // namespace displays
 }  // namespace rviz_default_plugins
 
-#include <pluginlib/class_list_macros.hpp> // NOLINT
+#include <pluginlib/class_list_macros.hpp>  // NOLINT
 PLUGINLIB_EXPORT_CLASS(rviz_default_plugins::displays::TemperatureDisplay, rviz_common::Display)

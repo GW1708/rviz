@@ -96,7 +96,7 @@ public:
   std::shared_ptr<PointCloudScalarDisplayImplementation> display_;
 };
 
-TEST_F(PointCloudScalarDisplayFixture, allocate_point_cloud_common_memory_correctly)
+TEST_F(PointCloudScalarDisplayFixture, translates_scalar_message_into_point_cloud_message_correctly)
 {
   auto illuminance_message = createIlluminanceMessage();
   auto point_cloud_message =
@@ -104,45 +104,20 @@ TEST_F(PointCloudScalarDisplayFixture, allocate_point_cloud_common_memory_correc
     illuminance_message->header, illuminance_message->illuminance, "illuminance");
 
   ASSERT_THAT(point_cloud_message->point_step, Eq(20u));
-}
 
-TEST_F(PointCloudScalarDisplayFixture, copy_scalar_value_correctly)
-{
-  auto illuminance_message = createIlluminanceMessage();
-  auto point_cloud_message =
-    display_->createPointCloud2Message(
-    illuminance_message->header, illuminance_message->illuminance, "illuminance");
+  ASSERT_THAT(point_cloud_message->header.frame_id, illuminance_message->header.frame_id);
+
+  ASSERT_THAT(point_cloud_message->fields[3].name, Eq("illuminance"));
 
   uint8_t offset_ptr = point_cloud_message->fields[3].offset;
   double * scalar_value_ptr =
     reinterpret_cast<double *>(point_cloud_message->data.data() + offset_ptr);
-
   ASSERT_THAT(*scalar_value_ptr, Eq(100.));
-}
-
-TEST_F(PointCloudScalarDisplayFixture, copy_coordinate_values_correctly)
-{
-  auto illuminance_message = createIlluminanceMessage();
-  auto point_cloud_message =
-    display_->createPointCloud2Message(
-    illuminance_message->header, illuminance_message->illuminance, "illuminance");
 
   for (int i = 0; i < 3; i++) {
     uint8_t offset_ptr = point_cloud_message->fields[i].offset;
-
     float * coordinate_value_ptr =
       reinterpret_cast<float *>(point_cloud_message->data.data() + offset_ptr);
-
     ASSERT_THAT(*coordinate_value_ptr, Eq(0.f));
   }
-}
-
-TEST_F(PointCloudScalarDisplayFixture, copy_header_correctly)
-{
-  auto illuminance_message = createIlluminanceMessage();
-  auto point_cloud_message =
-    display_->createPointCloud2Message(
-    illuminance_message->header, illuminance_message->illuminance, "illuminance");
-
-  ASSERT_THAT(point_cloud_message->header, illuminance_message->header);
 }
