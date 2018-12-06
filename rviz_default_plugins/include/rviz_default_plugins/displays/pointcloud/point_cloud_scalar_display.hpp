@@ -120,12 +120,17 @@ private:
     point_cloud_common_->initialize(
       this->context_, this->scene_node_);
     setInitialValues();
-    hideUnneededProperties();
   }
 
   void update(float wall_dt, float ros_dt) override
   {
     point_cloud_common_->update(wall_dt, ros_dt);
+    hideUnneededProperties();
+  }
+
+  void onEnable() override
+  {
+    rviz_common::RosTopicDisplay<MessageType>::onEnable();
   }
 
   void onDisable() override
